@@ -9,7 +9,7 @@ use Spatie\Permission\Models\Role;
 class CreateSuperAdmin extends Command
 {
     protected $signature = 'make:superadmin {name} {email} {password}';
-    protected $description = 'Créer un super-admin';
+    protected $description = 'Créer un super admin';
 
     public function handle()
     {
@@ -26,12 +26,12 @@ class CreateSuperAdmin extends Command
 
         ]);
 
-        // Vérifier si le rôle super-admin existe, sinon le créer
-        $role = Role::firstOrCreate(['name' => 'super-admin']);
+        // Vérifier si le rôle superadmin existe, sinon le créer
+        $role = Role::firstOrCreate(['name' => 'superadmin']);
 
         // Associer le rôle à l'utilisateur
         $user->roles()->attach($role->id);
 
-        $this->info("Super-admin créé : {$user->name} ({$user->email}) ");
+        $this->info("Super admin créé : {$user->name} ({$user->email}) ");
     }
 }

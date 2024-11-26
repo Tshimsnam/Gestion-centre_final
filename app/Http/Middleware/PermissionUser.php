@@ -21,7 +21,7 @@ class PermissionUser
 
         $user = $request->user();
         try {
-            if ($user->hasRole('admin') || $user->hasRole('super-admin')){
+            if ($user->hasRole('admin') || $user->hasRole('superadmin')){
                 return $next($request);
             } else {
                 return redirect()->route('activitencours');
