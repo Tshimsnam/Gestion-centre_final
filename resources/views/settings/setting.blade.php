@@ -1,5 +1,5 @@
 <x-app-layout>
-    @if (Auth()->user()->hasRole('super-admin'))
+    @if (Auth()->user()->hasRole('superadmin'))
 
 
         <x-slot name="header">
@@ -16,59 +16,68 @@
         </x-slot>
 
         <!-- Main modal -->
- @section('modal')
-
-
-
-
-        <div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-            <div class="relative w-full max-w-md max-h-full p-4">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            INSERER LE MODEL DE ROLE
-                        </h3>
-                        <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="rouless-modal">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-
-                    <!-- Modal body -->
-                     <div class="p-4 md:p-5">
-                         <form class="space-y-4" action="{{ route('role.store') }}" method="POST">
-                             @csrf
-                             <div>
-                                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                     name</label>
-                                 <input type="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="ex: superUser" required />
-                             </div>
-
-
-                            <button type="submit" class="w-full py-2 px-3 inline-flex items-center justify-center gap-x-2 font-medium rounded-lg border border-transparent bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:bg-[#FF6822] disabled:opacity-50 disabled:pointer-events-none">
-                                Crée
+        @section('modal')
+            <div id="crud-modal" tabindex="-1" aria-hidden="true"
+                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative w-full max-w-md max-h-full p-4">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <!-- Modal header -->
+                        <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                INSERER LE MODEL DE ROLE
+                            </h3>
+                            <button type="button"
+                                class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-hide="rouless-modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
                             </button>
+                        </div>
 
-                             <div class="flex items-center justify-center text-sm font-medium text-red-500 dark:text-gray-300">
-                                 <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                     <path d="M11 10V12H9V14H7V12H5.8C5.4 13.2 4.3 14 3 14C1.3 14 0 12.7 0 11S1.3 8 3 8C4.3 8 5.4 8.8 5.8 10H11M3 10C2.4 10 2 10.4 2 11S2.4 12 3 12 4 11.6 4 11 3.6 10 3 10M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M16 12C13.8 12 12 10.2 12 8S13.8 4 16 4 20 5.8 20 8 18.2 12 16 12Z" />
-                                 </svg>
-                                 <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                     <path d="M12,8A1,1 0 0,1 13,9A1,1 0 0,1 12,10A1,1 0 0,1 11,9A1,1 0 0,1 12,8M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,6A3,3 0 0,0 9,9C9,10.31 9.83,11.42 11,11.83V18H13V16H15V14H13V11.83C14.17,11.42 15,10.31 15,9A3,3 0 0,0 12,6Z" />
-                                 </svg>
-                             </div>
-                         </form>
-                     </div>
+                        <!-- Modal body -->
+                        <div class="p-4 md:p-5">
+                            <form class="space-y-4" action="{{ route('role.store') }}" method="POST">
+                                @csrf
+                                <div>
+                                    <label for="name"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        name</label>
+                                    <input type="name" name="name" id="name"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        placeholder="ex: superUser" required />
+                                </div>
 
+
+                                <button type="submit"
+                                    class="w-full py-2 px-3 inline-flex items-center justify-center gap-x-2 font-medium rounded-lg border border-transparent bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:bg-[#FF6822] disabled:opacity-50 disabled:pointer-events-none">
+                                    Crée
+                                </button>
+
+                                <div
+                                    class="flex items-center justify-center text-sm font-medium text-red-500 dark:text-gray-300">
+                                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M11 10V12H9V14H7V12H5.8C5.4 13.2 4.3 14 3 14C1.3 14 0 12.7 0 11S1.3 8 3 8C4.3 8 5.4 8.8 5.8 10H11M3 10C2.4 10 2 10.4 2 11S2.4 12 3 12 4 11.6 4 11 3.6 10 3 10M16 14C18.7 14 24 15.3 24 18V20H8V18C8 15.3 13.3 14 16 14M16 12C13.8 12 12 10.2 12 8S13.8 4 16 4 20 5.8 20 8 18.2 12 16 12Z" />
+                                    </svg>
+                                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M12,8A1,1 0 0,1 13,9A1,1 0 0,1 12,10A1,1 0 0,1 11,9A1,1 0 0,1 12,8M21,11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1L21,5V11M12,6A3,3 0 0,0 9,9C9,10.31 9.83,11.42 11,11.83V18H13V16H15V14H13V11.83C14.17,11.42 15,10.31 15,9A3,3 0 0,0 12,6Z" />
+                                    </svg>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
-        </div>
-
- @endsection
+        @endsection
 
 
 
@@ -124,59 +133,9 @@
             </ul>
         </div>
         <div id="default-styled-tab-content">
-
             <div class="hidden p-4 rounded-lg bg-[#eaeaebf3] dark:bg-[#0F172A]" id="styled-profile" role="tabpanel"
                 aria-labelledby="profile-tab">
-                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                    <div class="flex justify-end mt-4 mb-4 text-white">
-                        <button type="submit"
-                            class="p-2 text-white bg-[#ff7322] hover:bg-[#ff7920] focus:bg-[#ff7910] disabled:opacity-50 rounded-md"
-                            data-modal-target="crud-modal" data-modal-toggle="crud-modal">Créer un rôle
-                        </button>
-                    </div>
-                    <table class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400">
-                        <thead class="text-xs text-white uppercase bg-[#eaeaebf3] dark:bg-gray-700 dark:text-white">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 bg-slate-700">
-                                    N°
-                                </th>
-                                <th scope="col" class="px-6 py-3 bg-slate-700">
-                                    Nom d'utilisateur
-                                </th>
-                                <th scope="col" class="px-6 py-3 bg-slate-700">
-                                    Actions
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($users as $i => $item)
-                                <tr
-                                    class="border-b odd:bg-[#eaeaebf3] odd:dark:bg-[#0F172A] even:bg-gray-50 even:dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row"
-                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $i + 1 }}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $item->name }}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <a href="{{ route('user_role.show', $item->id) }}"
-                                            class="inline-flex items-center px-3 py-2 text-sm font-medium text-gray-800 bg-white border border-gray-200 rounded-lg shadow-sm gap-x-2 hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 group">
-
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                fill="none" viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round"
-                                                    stroke-linejoin="round" stroke-width="2" {{-- d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /> --}}
-                                                    d="M11 5V11H5V13H11V19H13V13H19V11H13V5H11M19 15C17.95 15 16.9 15.8 16.9 16.82V18.64C16.45 18.64 16 19.07 16 19.5V22.05C16 22.56 16.45 23 16.9 23H21.03C21.55 23 22 22.56 22 22.13V19.58C22 19.07 21.55 18.64 21.1 18.64H17.88V16.82C17.88 16.24 18.4 15.87 19 15.87S20.13 16.24 20.13 16.82V17.18H21.1V16.82C21.1 15.8 20.05 15 19 15Z" />
-                                            </svg>
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                <x-assign-roles-to-users></x-assign-roles-to-users>
             </div>
             <div class="hidden p-4 rounded-lg bg-[#eaeaebf3] dark:bg-[#0F172A]" id="styled-dashboard" role="tabpanel"
                 aria-labelledby="dashboard-tab">
@@ -189,9 +148,10 @@
                                     <div class="flex flex-col bg-transparent md:flex-row">
                                         <div class="p-6 lg:w-3/5 xl:w-1/2 sm:p-12">
                                             <div class="flex flex-col items-center mt-12">
-                                                 <div class="mb-8 text-center ">
-                                                     <h1 class="text-2xl font-semibold leading-tight text-gray-700">Formulaire d'inscription</h1>
-                                                 </div>
+                                                <div class="mb-8 text-center ">
+                                                    <h1 class="text-2xl font-semibold leading-tight text-gray-700">
+                                                        Formulaire d'inscription</h1>
+                                                </div>
 
                                                 <div class="flex-1 w-full mt-8">
                                                     <form method="POST" action="{{ route('register') }}">
@@ -257,8 +217,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div
-                                         class="flex-1 bg-center bg-cover" style="background-image: url('/img/logo.jpg');">
+                                        <div class="flex-1 bg-center bg-cover"
+                                            style="background-image: url('/img/logo.jpg');">
 
                                         </div>
                                     </div>
@@ -268,20 +228,26 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Informations de contact des développeurs -->
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-contacts" role="tabpanel"
                 aria-labelledby="contacts-tab">
-                <p class="text-sm text-gray-500 dark:text-gray-400"> les informations des developpeurs qui concut
-                    l'apllication. Vous pouvez
-                    nous joindre au numéro suivant e cas de panne ou de bug.</p>
-                <strong class="font-medium text-gray-800 dark:text-white">Carlo Musongela : +33 1 23 45 67 89
-                </strong>.</p>
-                <p class="font-medium text-gray-800 dark:text-white">Idriss elba :+33 1 23 45 67 89</p>
-                <p class="font-medium text-gray-800 dark:text-white">Manasse Thims :+33 1 23 45 67 89</p>
-                <p class="font-medium text-gray-800 dark:text-white">Francine Magbia :+33 1 23 45 67 89</p>
-                <p class="font-medium text-gray-800 dark:text-white">Vincent thips :+33 1 23 45 67 89</p>
-                <p class="font-medium text-gray-800 dark:text-white">Junior Walker :+33 1 23 45 67 89</p>
-
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Retrouvez ci-dessous les informations de contact des développeurs ayant contribué à la conception de
+                    cette application.
+                    N'hésitez pas à nous contacter en cas de panne ou de bug.
+                </p> <br>
+                <strong class="font-medium text-gray-800 dark:text-white">
+                    Carlo Musongela : +33 1 23 45 67 89
+                </strong>
+                <p class="font-medium text-gray-800 dark:text-white">Idriss Elba : +33 1 23 45 67 89</p>
+                <p class="font-medium text-gray-800 dark:text-white">Manasse Tshimanga : +33 1 23 45 67 89</p>
+                <p class="font-medium text-gray-800 dark:text-white">Francine Magbia : +33 1 23 45 67 89</p>
+                <p class="font-medium text-gray-800 dark:text-white">Vincent Tshipamba : +33 1 23 45 67 89</p>
+                <p class="font-medium text-gray-800 dark:text-white">Junior Walker : +33 1 23 45 67 89</p>
+                <p class="font-medium text-gray-800 dark:text-white">Josué Ndingambote : +33 1 23 45 67 89</p>
             </div>
+
 
             <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-typeevents" role="tabpanel"
                 aria-labelledby="contacts-tab">
@@ -300,19 +266,124 @@
 
             </div>
         </div>
-
-
-
     @endif
-
-
-
     @section('script')
         <script>
-            function delete(event) {
+            $(function() {
+                if (document.getElementById("user-roles-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+                    const dataTable = new simpleDatatables.DataTable("#user-roles-table", {
+                        searchable: false,
+                        sortable: false,
+                        pagging: false,
+                        perPageSelect: false
+                    })
+                }
 
-                event.preventDefault()
+            })
 
+            $(function() {
+                getUsersRoles();
+            });
+
+            function getUsersRoles() {
+                $.ajax({
+                    url: "{{ route('users.roles.index') }}",
+                    method: "GET",
+                    success: function(response) {
+                        var users = response.users;
+                        var roles = response.roles;
+                        var userRoles = response.userRoles;
+
+                        // Create the table header with roles
+                        var header = '<tr class="bg-gray-400"><th style="background-color: #d1d5db;"></th>';
+                        roles.forEach(function(role) {
+                            header +=
+                                '<th class="text-center">' + role.name + '</th>';
+                        });
+                        header += '</tr>';
+                        $('#user-roles-table thead').html(header);
+
+                        // Create the table body with users and checkboxes
+                        var body = '';
+
+                        // Initial rendering of the table
+                        users.forEach(function(user) {
+                            body +=
+                                '<tr class="hover:bg-[#ff7900]"><th class="text-md text-start"><a href="#" class="hover:bg-[#] p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" data-user-id="' +
+                                user.id + '" data-user-name="' + user.name + '">' + user.name + '</a></th>';
+                            roles.forEach(function(role) {
+                                var checked = userRoles[user.id] && userRoles[user.id].includes(role
+                                    .id) ? 'checked' : '';
+                                body +=
+                                    '<td class="text-center"><input type="checkbox" class="user-checkbox" data-role-id="' +
+                                    role.id + '" data-user-id="' + user.id +
+                                    '" ' + checked + '></td>';
+                            });
+                            body += '</tr>';
+                        });
+
+                        $('#user-roles-table tbody').html(body);
+
+                        // Attach change event listeners to checkboxes
+                        var requestInProgress = false;
+
+                        $('#user-roles-table').on('change', 'input.user-checkbox', function() {
+                            if (requestInProgress) {
+                                return;
+                            }
+
+                            requestInProgress = true;
+
+                            var roleId = $(this).data('role-id');
+                            var userId = $(this).data('user-id');
+                            var checked = $(this).is(':checked');
+                            // Your existing AJAX logic to update user's roles on the server
+                            $.ajax({
+                                url: "{{ route('users.roles.update') }}",
+                                method: 'PUT',
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    role_id: roleId,
+                                    user_id: userId,
+                                    assign: checked
+                                },
+                                success: function(response) {
+                                    Swal.fire({
+                                        title: 'Succès!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        timer: 2000,
+                                        timerProgressBar: true,
+                                        customClass: {
+                                            popup: 'bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg', // Classes Tailwind pour le popup
+                                            confirmButton: 'bg-[#e38407] hover:bg-[#e38407] text-white font-bold py-2 px-4 rounded', // Bouton de confirmation
+                                            cancelButton: 'bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded' // Bouton d'annulation
+                                        },
+
+                                    });
+                                    requestInProgress = false;
+                                },
+                                error: function(error) {
+                                    Swal.fire({
+                                        title: 'Erreur!',
+                                        text: 'Il y a eu une erreur lors de l\'assignation du rôle.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            popup: 'bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded-lg shadow-lg', // Classes Tailwind pour le popup
+                                            confirmButton: 'bg-[#e38407] hover:bg-[#e38407] text-white font-bold py-2 px-4 rounded', // Bouton de confirmation
+                                            cancelButton: 'bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded' // Bouton d'annulation
+                                        },
+                                    });
+                                    requestInProgress = false;
+                                }
+                            });
+                        });
+                    },
+                    error: function(error) {
+                        console.error("There was an error fetching roles and permissions:", error);
+                    }
+                })
             }
         </script>
     @endsection

@@ -1,13 +1,14 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Middleware\CheckUserRole;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\PermissionUser;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,7 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'permissions' => PermissionUser::class
+            'permissions' => PermissionUser::class,
+            'checkRole' => CheckUserRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
@@ -51,7 +53,5 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($exception instanceof HttpException && $exception->getStatusCode() == 503) {
                 return response()->view("errors.503", [], 503);
             }
-
-
         });
     })->create();

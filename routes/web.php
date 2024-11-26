@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ActiviteController;
+use App\Models\User;
+use App\Models\Hashtag;
+use App\Models\Categorie;
+use App\Models\TypeEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Models\Categorie;
-use App\Models\Hashtag;
-use App\Models\User;
-use App\Models\TypeEvent;
+use App\Http\Controllers\ActiviteController;
+use App\Http\Controllers\RolePermissionController;
 
 Route::get('/', function () {
     return redirect('login');
@@ -19,6 +20,10 @@ Route::get('/settings', function () {
     $tags= Hashtag::all();
     return view('settings.setting', compact('users','typEvent','categories','tags'));
 })->name('setting');
+
+Route::get('/users/roles', [RolePermissionController::class, 'getUsersRoles'])->name('users.roles.index');
+Route::put('/users/roles/update', [RolePermissionController::class, 'updateUserRole'])->name('users.roles.update');
+Route::delete('/users/roles/delete', [RolePermissionController::class, 'removeUserRole'])->name('users.roles.remove');
 
 Route::get('/dashboard', [ActiviteController::class, 'chartActivity'])->middleware(['auth', 'verified'])->name('dashboard');
 

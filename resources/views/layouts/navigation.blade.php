@@ -56,7 +56,7 @@
                     </li>
                 </ul>
             </div>
-            @if (Auth()->user()->hasRole('super-admin'))
+            @if (Auth()->user()->hasRole('superadmin'))
                 <div class="hidden text-sm text-white cursor-pointer md:block md:text-md" aria-expanded="false">
                     <a href="{{ route('setting') }}">
                         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -179,7 +179,7 @@
         </div>
 
 
-        @if (Auth()->user()->hasRole('super-admin'))
+        @if (Auth()->user()->hasRole('superadmin'))
             <div
                 class="hover:ml-4 w-full hover:text-[#FF7900] dark:hover:text-[#FF7900]  p-2 pl-8 rounded-full transform ease-in-out duration-300 flex flex-row items-center space-x-3">
                 <a href="{{ route('type_Contrats.index') }}"
