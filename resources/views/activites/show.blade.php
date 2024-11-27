@@ -86,7 +86,7 @@
         <!-- Presence tab content -->
         <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="content-presence" role="tabpanel"
             aria-labelledby="settings-tab">
-            <x-activite-presence-component :fullDates="$fullDates" :dates="$dates" :data="$data" />
+            <x-activite-presence-component :fullDates="$fullDates" :dates="$dates" :presencesData="$presencesData" />
         </div>
 
         <!-- import tab content -->
@@ -103,6 +103,34 @@
     @endphp
 
     @section('script')
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Get all checkboxes in the table
+                const checkboxes = document.querySelectorAll('.checkbox');
+                const submitButton = document.querySelector("#submitPresenceButton");
+
+                // Initially hide the submit button
+                submitButton.style.display = 'none';
+
+                // Function to check if any checkbox was changed
+                function handleCheckboxChange() {
+                    let anyChecked = false;
+                    checkboxes.forEach(function(checkbox) {
+                        if (checkbox.checked) {
+                            anyChecked = true;
+                        }
+                    });
+                    // Show the submit button if any checkbox is checked
+                    submitButton.style.display = anyChecked ? 'inline-block' : 'none';
+                }
+
+                // Add event listeners to checkboxes
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener("change", handleCheckboxChange);
+                });
+            });
+        </script>
+
         <script>
             function showUserCV(event, cvUrl, prenom, nom) {
                 event.preventDefault(); // Empêche le lien de se comporter normalement

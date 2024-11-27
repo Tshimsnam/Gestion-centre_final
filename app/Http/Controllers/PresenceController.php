@@ -14,15 +14,37 @@ use Illuminate\Support\Facades\DB;
 
 class PresenceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function updatePresences(Request $request)
+    {
+        $presences = $request->input('presences');
+
+        foreach ($presences as $candidateId => $dates) {
+            foreach ($dates as $date) {
+                $presence = Presence::where('candidat_id', $candidateId)
+                    ->where('date', $date)
+                    ->first();
+
+                if ($presence) {
+                    $presence->update(['date' => $date]);
+                } else {
+                    Presence::create([
+                        'candidat_id' => $candidateId,
+                        'date' => $date
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->back()->with('success', 'Presences updated successfully.');
+    }
+
     public function index()
     {
         $presences = Presence::orderBy('id')->get();
 
         return view('presences.presence', compact('presences'));
     }
+
     public function create($id, Request $request)
     {
         $selected = $request->query('selected');
@@ -34,6 +56,7 @@ class PresenceController extends Controller
         $activite = Activite::find($id);
         return view('presences.selection', compact('id', 'activite', 'events'));
     }
+
     public function filtrer(Request $request, $id)
     {
         $coordonnee = $request->input('coordonnee');
@@ -219,7 +242,9 @@ class PresenceController extends Controller
 
         return view('presences.securite', compact('activites'));
     }
-    public function confirmation(){
+
+    public function confirmation()
+    {
         if (!session('enregistrement_complet')) {
             return redirect()->route('activitencours');
         }
@@ -227,5 +252,4 @@ class PresenceController extends Controller
 
         return view('presences.confirmation');
     }
-    
 }

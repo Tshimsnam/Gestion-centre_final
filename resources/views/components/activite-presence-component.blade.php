@@ -1,61 +1,65 @@
-@props(['dates', 'data', 'fullDates'])
+@props(['dates', 'presencesData', 'fullDates'])
 
-
-<div class="py-6 relative overflow-x-auto">
-    <table id="candidatpresence" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col"
-                    class="bg-gray-700 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Id
-                </th>
-                <th scope="col"
-                    class=" bg-gray-700 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    FirstName</th>
-                <th scope="col"
-                    class="bg-gray-700 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Lastname
-                </th>
-                @foreach ($dates as $item)
-                    <th scope="col" class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {{ $item }}
+<form id="presenceForm" method="POST" action="{{ route('presences.update') }}">
+    @csrf
+    <div class="py-6 relative overflow-x-auto">
+        <table id="candidatpresence" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col"
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Id
                     </th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $i => $item)
-                <tr id="rowAll" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td scope="col" class="px-6 py-3 bg-gray-700 text-white">
-                        {{ $i + 1 }}</td>
-                    <td scope="col" class="px-6 py-3 bg-gray-700 text-white">
-                        {{ $item['odcuser']['first_name'] }}</td>
-                    <td scope="col" class="px-6 py-3 bg-gray-700 text-white">
-                        {{ $item['odcuser']['last_name'] }}
-                    </td>
-                    @foreach ($fullDates as $date)
-                        <td scope="col" class="px-6 py-3">
-                            @if (in_array($date, $item['date']))
-                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                </svg>
-                            @else
-                                <svg class="w-6 h-6 text-red-500 bg-red bg-white" aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                        stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6" />
-                                </svg>
-                            @endif
-
-                        </td>
+                    <th scope="col"
+                        class=" bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        FirstName</th>
+                    <th scope="col"
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Lastname
+                    </th>
+                    @foreach ($dates as $item)
+                        <th scope="col"
+                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ $item }}
+                        </th>
                     @endforeach
                 </tr>
-            @endforeach
+            </thead>
+            <tbody>
+                @foreach ($presencesData as $i => $item)
+                    <tr id="rowAll" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
+                            {{ $i + 1 }}</td>
+                        <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
+                            {{ $item['odcuser']['first_name'] }}</td>
+                        <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
+                            {{ $item['odcuser']['last_name'] }}
+                        </td>
+                        @foreach ($fullDates as $i => $date)
+                            <td scope="col" class="px-6 py-3">
+                                @if (in_array($date, $item['date']))
+                                    <input type="hidden" name="dates[]" value="{{ $date }}">
 
-        </tbody>
-    </table>
-</div>
+                                    <!-- Checkbox for presence with candidate ID and date -->
+                                    <input type="checkbox" class="checkbox" name="presences[{{ $item['id'] }}][]"
+                                        value="{{ $date }}" checked>
+                                @else
+                                    <input type="checkbox" class="checkbox" name="presences[{{ $item['id'] }}][]"
+                                        value="{{ $date }}">
+                                @endif
+                            </td>
+                        @endforeach
+
+                    </tr>
+                @endforeach
+
+            </tbody>
+        </table>
+        <p>
+            <button type="submit" id="submitPresenceButton"
+                class="mt-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                Valider
+            </button>
+        </p>
+    </div>
+</form>
