@@ -34,28 +34,43 @@
             <div class=" dark:bg-[#1e293bf3] bg-white pt-20 px-2 md:px-5 pb-4 ml-12  backdrop-blur-2xl">
                 <!-- Page Heading -->
                 @if (isset($header))
-                    <nav class="flex px-5 py-3 text-gray-700 rounded-lg bg-[#eaeaebf3] dark:bg-[#1E293B]" aria-label="Breadcrumb">
+                    <nav class="flex px-5 py-3 text-gray-700 rounded-lg bg-[#eaeaebf3] dark:bg-[#1E293B]"
+                        aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                            @if (!request()->routeIs('dashboard'))
+                                <li class="inline-flex items-center">
+                                    <a href="{{ route('dashboard') }}"
+                                        class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
+                                        </svg>
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="flex items-center">
+                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                                clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </li>
+                            @endif
                             <li class="inline-flex items-center">
-                                <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                                <a href="#"
+                                    class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
                                     @yield('svg')
-                                  {{ $header }}
-
+                                    {{ $header }}
                                 </a>
-                            </li>
-                            <li>
-                                <div class="flex items-center">
-                                    <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                            </li>
-                            <li class="inline-flex items-center">
-                                <a id="previous-page" href="{{ $previous_page ?? 'dashboard' }}" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"></a>
                             </li>
                         </ol>
                     </nav>
-
                 @endif
 
 
@@ -126,30 +141,6 @@
                 logo.classList.add('ml-12')
             }
         }
-
-
-            //  le stockage local
-            document.addEventListener("DOMContentLoaded", function() {
-            // Récupère l'URL de la page actuelle
-            const currentPage = window.location.href;
-
-            // Récupère la page précédente stockée
-            const previousPage = localStorage.getItem('previousPage');
-
-            // Met à jour le lien de la page précédente dans le breadcrumb
-            if (previousPage) {
-            const previousPageLink = document.getElementById('previous-page');
-            previousPageLink.href = previousPage;
-
-            // Extrait le nom de la page de l'URL
-            const previousPageName = previousPage.split('/').pop(); // Récupère la dernière partie de l'URL
-            previousPageLink.textContent = previousPageName.charAt(0).toUpperCase() + previousPageName.slice(1); // Capitalise le premier caractère
-            }
-
-            // Stocke l'URL actuelle comme la précédente pour la prochaine navigation
-            localStorage.setItem('previousPage', currentPage);
-            });
-
     </script>
     @yield('modal')
     @yield('modalparticipants')
