@@ -9,6 +9,7 @@ use FontLib\Table\Type\name;
 Route::get('codeqr', [QrCodeController::class, 'index'])->name('codeqr')->middleware('permissions');
 Route::get('participant/{id}', [QrCodeController::class, 'participant'])->name('participant');
 Route::post('storeqrcode/{id}', [QrCodeController::class, 'store'])->name('storeqrcode');
+Route::post('presences/update', [PresenceController::class, 'updatePresences'])->name('presences.update');
 // Route::resource('presences', PresenceController::class)->middleware('permissions');
 Route::get('create/{id}', [PresenceController::class, 'create'])->name('create');
 Route::get('presences', [PresenceController::class, 'index'])->name('presences.index');

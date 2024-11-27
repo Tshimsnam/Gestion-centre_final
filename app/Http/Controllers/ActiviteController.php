@@ -177,7 +177,7 @@ class ActiviteController extends Controller
             list($dates, $fullDates) = $this->getDatesRange($dateDebut, $dateFin);
 
             // Récupérer les présences associées aux candidats
-            $data = $this->getCandidatsPresenceData($participants);
+            $presencesData = $this->getCandidatsPresenceData($participants);
 
             // Données pour le graphique
             $datachart = $this->getCandidatsChartData($id);
@@ -186,7 +186,7 @@ class ActiviteController extends Controller
 
             return view('activites.show', compact(
                 'participantsData', 'datachart', 'candidatsData', 'labels',
-                'data', 'activite', 'id', 'odcusers', 'fullDates', 'dates',
+                'presencesData', 'activite', 'id', 'odcusers', 'fullDates', 'dates',
                 'presences', 'modelMail'
             ));
         } catch (\Exception $e) {
@@ -231,7 +231,7 @@ class ActiviteController extends Controller
         $data = [];
 
         foreach ($participants as $participant) {
-            $pres = Presence::where('candidat_id', $participant->id)->get();
+            $pres = Presence::where('candidat_id', $participant->id)->latest()->get();
             $presenceDates = $pres->pluck('date')->map(fn($date) => date('Y-m-d', strtotime($date)))->toArray();
 
             $candidatPresence = $participant->toArray();

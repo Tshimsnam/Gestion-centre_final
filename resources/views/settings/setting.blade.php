@@ -11,7 +11,7 @@
                 </svg>
             @endsection
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-                {{ __('Paramétre') }}
+                {{ __('Paramètres') }}
             </h2>
         </x-slot>
 
@@ -91,28 +91,28 @@
                     <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-styled-tab"
                         data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile"
                         aria-selected="false">
-                        Gestion D'accées</button>
+                        Gestion des accès</button>
                 </li>
                 <li class="me-2" role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                         id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab"
                         aria-controls="dashboard" aria-selected="false">
-                        Gestions Utlisateur</button>
+                        Gestions des utilisateurs</button>
                 </li>
 
                 <li role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                         id="contacts-styled-tab" data-tabs-target="#styled-typeevents" type="button" role="tab"
-                        aria-controls="contacts" aria-selected="false">Gestion Typevents</button>
+                        aria-controls="contacts" aria-selected="false">Gestion des types d'événèments</button>
                 </li>
 
                 <li role="presentation">
                     <button
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                         id="contacts-styled-tab" data-tabs-target="#styled-categories" type="button" role="tab"
-                        aria-controls="contacts" aria-selected="false">Gestion Categories</button>
+                        aria-controls="contacts" aria-selected="false">Gestion des catégories                                                                               </button>
                 </li>
 
                 <li role="presentation">
@@ -270,15 +270,14 @@
     @section('script')
         <script>
             $(function() {
-                if (document.getElementById("user-roles-table") && typeof simpleDatatables.DataTable !== 'undefined') {
-                    const dataTable = new simpleDatatables.DataTable("#user-roles-table", {
+                if (document.getElementById("userRolesTable") && typeof simpleDatatables.DataTable !== 'undefined') {
+                    const dataTable = new simpleDatatables.DataTable("#userRolesTable", {
                         searchable: false,
                         sortable: false,
                         pagging: false,
                         perPageSelect: false
                     })
                 }
-
             })
 
             $(function() {
@@ -295,13 +294,13 @@
                         var userRoles = response.userRoles;
 
                         // Create the table header with roles
-                        var header = '<tr class="bg-gray-400"><th style="background-color: #d1d5db;"></th>';
+                        var header = '<tr class="bg-gray-400 border-b border-gray-200 dark:border-gray-700"><th style="background-color: #d1d5db;"></th>';
                         roles.forEach(function(role) {
                             header +=
-                                '<th class="text-center">' + role.name + '</th>';
+                                '<th class="text-center px-6 py-4">' + role.name + '</th>';
                         });
                         header += '</tr>';
-                        $('#user-roles-table thead').html(header);
+                        $('#userRolesTable thead').html(header);
 
                         // Create the table body with users and checkboxes
                         var body = '';
@@ -309,25 +308,25 @@
                         // Initial rendering of the table
                         users.forEach(function(user) {
                             body +=
-                                '<tr class="hover:bg-[#ff7900]"><th class="text-md text-start"><a href="#" class="hover:bg-[#] p-2 font-medium text-gray-900 whitespace-nowrap dark:text-white" data-user-id="' +
+                                '<tr class="hover:bg-[#ff7900] border-b border-gray-300 dark:border-gray-700"><th class="scope="row" class="px-6 py-4 text-gray-900 whitespace-nowrap bg-gray-50 dark:text-white dark:bg-gray-800"><a href="#" class="p-2" data-user-id="' +
                                 user.id + '" data-user-name="' + user.name + '">' + user.name + '</a></th>';
                             roles.forEach(function(role) {
                                 var checked = userRoles[user.id] && userRoles[user.id].includes(role
                                     .id) ? 'checked' : '';
                                 body +=
-                                    '<td class="text-center"><input type="checkbox" class="user-checkbox" data-role-id="' +
+                                    '<td class="text-center px-6 py-4"><input type="checkbox" class="user-checkbox" data-role-id="' +
                                     role.id + '" data-user-id="' + user.id +
                                     '" ' + checked + '></td>';
                             });
                             body += '</tr>';
                         });
 
-                        $('#user-roles-table tbody').html(body);
+                        $('#userRolesTable tbody').html(body);
 
                         // Attach change event listeners to checkboxes
                         var requestInProgress = false;
 
-                        $('#user-roles-table').on('change', 'input.user-checkbox', function() {
+                        $('#userRolesTable').on('change', 'input.user-checkbox', function() {
                             if (requestInProgress) {
                                 return;
                             }
