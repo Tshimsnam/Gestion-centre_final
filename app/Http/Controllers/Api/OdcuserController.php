@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+
 use App\Models\Odcuser;
 use Illuminate\Http\Request;
+use App\Service\SheetDbservice;
+use App\Http\Controllers\Controller;
 
 class OdcuserController extends Controller
 {
@@ -14,7 +16,7 @@ class OdcuserController extends Controller
     public function index()
     {
         $odcusers = Odcuser::all();
-        
+
         return response()->json($odcusers);
     }
 
@@ -48,5 +50,22 @@ class OdcuserController extends Controller
     public function destroy(Odcuser $odcuser)
     {
         //
+    }
+
+    public function getSheetUsers(Request $request)
+    {
+        // Validation des données du formulaire
+        $validated = $request->validate([
+            'spreadsheetId' => 'required|string',
+            'range' => 'required|string',
+        ]);
+
+
+        $range = 'Réponses au formulaire 1';
+
+        $sheetService = new SheetDbservice($validated['spreadsheetId']);
+        $data = $sheetService->getData( $range);
+
+        return response()->json($data);
     }
 }

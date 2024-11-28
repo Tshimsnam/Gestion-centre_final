@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ActiviteController;
+use App\Http\Controllers\Api\OdcuserController;
 use App\Http\Controllers\CategorieController;
 use App\Http\Controllers\HashtagController;
 use App\Http\Controllers\TypeEventController;
@@ -27,5 +28,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('/categories', CategorieController::class);
     Route::resource('/hashtags', HashtagController::class);
 })->middleware('permissions');
+
+Route::get('/sheet-form', function () {
+    return view('test.form');
+});
+
+Route::post('/get-sheet-users', [OdcuserController::class, 'getSheetUsers'])->name('getSheetUsers');
 
 require __DIR__ . '/auth.php';

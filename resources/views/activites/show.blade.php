@@ -70,7 +70,8 @@
     <!-- Tab content -->
     <div id="default-styled-tab-content">
         <!-- Show activity details -->
-        <x-activitesShow :datachart="$datachart" :show="$activite" />
+        <x-activitesShow :nbj="$nbj" :event="$activite" :candidats="$candidats" :total_ih="$total_ih" :total_if="$total_if"
+            :total_ph="$total_ph" :total_pf="$total_pf" :total_p="$total_p" />
 
         <!-- Show candidates for the activity -->
         <x-show-candidates-event :activite="$activite" :labels="$labels" :candidatsData="$candidatsData" :odcusers="$odcusers"
@@ -98,11 +99,130 @@
 
 
 
+
+
     @php
         $url = env('API_URL');
     @endphp
 
     @section('script')
+        <script>
+            const parcours = async (id) => {
+                $('#parcours-modal table tbody').html('')
+                let rep = await fetch('{{ route('events.api.parcours', $activite->id) }}')
+                    .then(response => response.json());
+
+                console.log('parcours', rep)
+
+                rep.map((data, i) => {
+                    var te = []
+                    var events = data.events
+                    for (let i = 0; i < events.length; i++) {
+                        te.push("<li> " + events[i].title + "</li>")
+                    }
+
+                    var ve = te.join('<br> ')
+
+                    $('#parcours-modal table tbody').append(`
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${i+1}
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        ${data.firstName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.lastName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.gender}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <ul>
+                                        ${ve}
+                                        </ul>
+                                    </td>
+                                </tr>
+                `)
+                })
+            }
+        </script>
+        
+        <script>
+            const cinq_event = async (id) => {
+                $('#cinq-modal table tbody').html('')
+                let rep = await fetch('{{ route('events.api.cinq', $activite->id) }}')
+                    .then(response => response.json());
+
+                console.log('cinq', rep)
+
+                rep.map((data, i) => {
+                    var te = []
+                    var events = data.events
+                    for (let i = 0; i < events.length; i++) {
+                        te.push("<li> " + events[i].title + "</li>")
+                    }
+
+                    var ve = te.join('<br> ')
+
+                    $('#cinq-modal table tbody').append(`
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${i+1}
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        ${data.firstName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.lastName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.gender}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <ul>
+                                        ${ve}
+                                        </ul>
+                                    </td>
+                                </tr>
+                `)
+                })
+            }
+        </script>
+
+        <script>
+            const nouveau = async (id) => {
+                $('#news-modal table tbody').html('')
+                let rep = await fetch('{{ route('events.api.nouveaux', $activite->id) }}')
+                    .then(response => response.json());
+
+                console.log('Nouveau', rep)
+
+                rep.map((data, i) => {
+
+
+                    $('#news-modal table tbody').append(`
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        ${i+1}
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        ${data.firstName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.lastName}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        ${data.gender}
+                                    </td>
+
+                                </tr>
+                `)
+                })
+            }
+        </script>
         <script>
             function showUserCV(event, cvUrl, prenom, nom) {
                 event.preventDefault(); // Empêche le lien de se comporter normalement
@@ -828,8 +948,6 @@
             }
         </script>
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-
-
         <script>
             function activer(event) {
                 event.preventDefault();
@@ -938,9 +1056,6 @@
                 chart.render();
             });
         </script>
-
-        </script>
-        {{-- pour choisir le certificat a generer --}}
         <script>
             function choix_certificat(event) {
                 event.preventDefault();
