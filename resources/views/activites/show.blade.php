@@ -298,9 +298,9 @@
         <script>
             $(document).ready(function() {
                 $('#candidatpresence').DataTable({
-                    "scrollX": true,
-                    "fixedColumns": {
-                        "start": 3
+                    scrollX: true,
+                    fixedColumns: {
+                        leftColumns: 3 // Fix the first 3 columns
                     }
                 });
 
