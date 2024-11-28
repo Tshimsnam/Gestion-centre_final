@@ -19,14 +19,22 @@ class PresenceController extends Controller
         $presences = $request->input('presences');
 
         foreach ($presences as $candidateId => $dates) {
+            $existingPresences = Presence::where('candidat_id', $candidateId)->pluck('date')->toArray();
+
+            $datesToRemove = array_diff($existingPresences, $dates);
+            if (!empty($datesToRemove)) {
+                Presence::where('candidat_id', $candidateId)
+                    ->whereIn('date', $datesToRemove)
+                    ->delete();
+            }
+
             foreach ($dates as $date) {
                 $presence = Presence::where('candidat_id', $candidateId)
                     ->where('date', $date)
                     ->first();
 
-                if ($presence) {
-                    $presence->update(['date' => $date]);
-                } else {
+                if (!$presence) {
+                    // Si la présence n'existe pas, on la crée
                     Presence::create([
                         'candidat_id' => $candidateId,
                         'date' => $date

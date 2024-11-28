@@ -6,17 +6,19 @@
         <table id="candidatpresence" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                    <th scope="col"
-                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <th
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
                         Id
                     </th>
-                    <th scope="col"
-                        class=" bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        FirstName</th>
-                    <th scope="col"
-                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Lastname
+                    <th
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
+                        FirstName
                     </th>
+                    <th
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
+                        LastName
+                    </th>
+
                     @foreach ($dates as $item)
                         <th scope="col"
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -40,7 +42,6 @@
                                 @if (in_array($date, $item['date']))
                                     <input type="hidden" name="dates[]" value="{{ $date }}">
 
-                                    <!-- Checkbox for presence with candidate ID and date -->
                                     <input type="checkbox" class="checkbox" name="presences[{{ $item['id'] }}][]"
                                         value="{{ $date }}" checked>
                                 @else
