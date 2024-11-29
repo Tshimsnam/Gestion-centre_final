@@ -1,4 +1,9 @@
 <x-app-layout>
+    <style>
+        #usersTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <div class="w-full">
@@ -67,7 +72,7 @@
                                             <span class="sr-only">Close modal</span>
                                         </button>
                                     </div>
-                                    
+
                                     <!-- Modal body -->
                                     <div class="p-4 md:p-5 space-y-4 relative overflow-x-auto" id="resultsContainer">
                                     </div>
