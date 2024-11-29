@@ -25,10 +25,18 @@ class OdcuserController extends Controller
     public function search(Request $request)
     {
         $searchTerm = $request->input('search');
-        $odcusers = Odcuser::where('first_name', 'LIKE', "%{$searchTerm}%")
-            ->orWhere('last_name', 'LIKE', "%{$searchTerm}%")
-            ->orWhere('email', 'LIKE', "%{$searchTerm}%")
-            ->take(4)
+        $searchTerms = explode(' ', $searchTerm);
+
+        $query = Odcuser::query();
+
+        foreach ($searchTerms as $term) {
+            $query->where(function ($q) use ($term) {
+                $q->where('first_name', 'LIKE', "%{$term}%")
+                ->orWhere('last_name', 'LIKE', "%{$term}%");
+            });
+        }
+
+        $odcusers = $query->take(4)
             ->latest()
             ->get();
 
