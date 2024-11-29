@@ -11,14 +11,67 @@
 
     <!-- Header section -->
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
-                <!-- Title of the page -->
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    {{ __($activite->title) }}
-                </h2>
+        <li class="inline-flex items-center">
+            <a href="#"
+                class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                @yield('svg')
+            </a>
+            <div class="flex justify-between items-center">
+                <div>
+                    <!-- Title of the page -->
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight hover:cursor-pointer"
+                        id="dropDownListActivities" data-dropdown-toggle="otherEvents">
+                        Activités
+                    </h2>
+
+                    <div id="otherEvents"
+                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropDownListActivities">
+                            @foreach ($otherActivities as $event)
+                                <li>
+                                    <a href="{{ route('activites.show', $event->id) }}"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        {{ $event->title }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="py-2">
+                            <a href="{{ route('activites.index') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                Voir toutes les autres activités
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </li>
+        <li>
+            <div class="flex items-center">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd">
+                    </path>
+                </svg>
+            </div>
+        </li>
+        <li class="inline-flex items-center">
+            <a href="#"
+                class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                @yield('svg')
+            </a>
+            <div class="flex justify-between items-center">
+                <div>
+                    <!-- Title of the page -->
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        {{ __($activite->title) }}
+                    </h2>
+                </div>
+            </div>
+        </li>
     </x-slot>
 
     @if (Session('success'))
