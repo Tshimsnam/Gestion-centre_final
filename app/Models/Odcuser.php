@@ -70,4 +70,8 @@ class Odcuser extends Model
         return $this->hasMany(Candidat::class);
     }
 
+    public function odcuserHasCV(): bool
+    {
+        return !empty($this->user_cv);
+    }
 }

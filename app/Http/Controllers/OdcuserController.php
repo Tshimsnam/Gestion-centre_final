@@ -32,7 +32,7 @@ class OdcuserController extends Controller
         foreach ($searchTerms as $term) {
             $query->where(function ($q) use ($term) {
                 $q->where('first_name', 'LIKE', "%{$term}%")
-                ->orWhere('last_name', 'LIKE', "%{$term}%");
+                    ->orWhere('last_name', 'LIKE', "%{$term}%");
             });
         }
 
@@ -112,13 +112,12 @@ class OdcuserController extends Controller
 
         $activitespAll = DB::select(
             '
-           SELECT act.*, cat.name
+            SELECT act.*, cat.name
             FROM activites act
             JOIN candidats c ON act.id = c.activite_id
             JOIN categories cat ON act.categorie_id = cat.id
             WHERE c.odcuser_id = ? AND (c.status = ?)
-            ORDER BY c.createdAt
-            LIMIT 3',
+            ORDER BY c.createdAt',
             [$userId, 'accept']
         );
 
