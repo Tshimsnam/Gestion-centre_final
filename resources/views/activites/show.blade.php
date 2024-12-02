@@ -9,16 +9,77 @@
         @endforeach
     @endif
 
+    <style>
+        #candidatpresence tbody tr:hover,
+        #participantTable tbody tr:hover,
+        #candidatTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+
     <!-- Header section -->
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <div>
-                <!-- Title of the page -->
-                <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    {{ __($activite->title) }}
-                </h2>
+        <li class="inline-flex items-center">
+            <a href="#"
+                class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                @yield('svg')
+            </a>
+            <div class="flex justify-between items-center">
+                <div>
+                    <!-- Title of the page -->
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight hover:cursor-pointer"
+                        id="dropDownListActivities" data-dropdown-toggle="otherEvents">
+                        Activités
+                    </h2>
+
+                    <div id="otherEvents"
+                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropDownListActivities">
+                            @foreach ($otherActivities as $event)
+                                <li>
+                                    <a href="{{ route('activites.show', $event->id) }}"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                        {{ $event->title }}
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                        <div class="py-2">
+                            <a href="{{ route('activites.index') }}"
+                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                Voir toutes les autres activités
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </li>
+        <li>
+            <div class="flex items-center">
+                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd">
+                    </path>
+                </svg>
+            </div>
+        </li>
+        <li class="inline-flex items-center">
+            <a href="#"
+                class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                @yield('svg')
+            </a>
+            <div class="flex justify-between items-center">
+                <div>
+                    <!-- Title of the page -->
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                        {{ __($activite->title) }}
+                    </h2>
+                </div>
+            </div>
+        </li>
     </x-slot>
 
     @if (Session('success'))
@@ -103,6 +164,8 @@
     @endphp
 
     @section('script')
+        <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js"></script>
+        <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 // Get all checkboxes in the table
@@ -184,14 +247,108 @@
             });
         </script>
         <script>
-            let selectAllCheckbox = document.getElementById('select-all');
-            let selectedCandidats = new Set(); // Pour stocker les IDs sélectionnés
-            let rowCheckboxes = document.querySelectorAll('.row-select');
-            let selectedCountDisplay = document.createElement('span');
-            selectedCountDisplay.className = "text-gray-200 ms-5";
-            selectedCountDisplay.id = "selected-count";
-
             $(document).ready(function() {
+                // Vérifier la présence des éléments dans le DOM avant de les utiliser
+                let selectAllCheckbox = document.getElementById('select-all');
+                let selectedCandidats = new Set();
+                let rowCheckboxes = document.querySelectorAll('.row-select');
+                let selectedCountDisplay = document.createElement('span');
+                selectedCountDisplay.className = "text-gray-200 ms-5";
+                selectedCountDisplay.id = "selected-count";
+
+                // Vérifiez si 'select-all' existe avant d'ajouter l'événement
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.addEventListener('change', function() {
+                        rowCheckboxes.forEach(checkbox => {
+                            checkbox.checked = selectAllCheckbox.checked;
+                            const id = checkbox.dataset
+                                .id; // Supposant que chaque checkbox a un data-id
+                            if (selectAllCheckbox.checked) {
+                                selectedCandidats.add(id); // Ajouter à l'ensemble si sélectionné
+                            } else {
+                                selectedCandidats.delete(id); // Retirer de l'ensemble si désélectionné
+                            }
+                        });
+                        updateSelectionDisplay(); // Mettre à jour l'affichage après changement
+                    });
+                }
+
+                // Vérifiez si les checkboxes de ligne existent avant de leur ajouter des événements
+                if (rowCheckboxes.length > 0) {
+                    rowCheckboxes.forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            const id = checkbox.dataset
+                                .id; // Supposant que chaque checkbox a un data-id
+                            if (checkbox.checked) {
+                                selectedCandidats.add(id); // Ajouter à l'ensemble si coché
+                            } else {
+                                selectedCandidats.delete(id); // Retirer de l'ensemble si décoché
+                            }
+                            // Vérifier si "Sélectionner tout" doit être cochée ou décochée
+                            selectAllCheckbox.checked = Array.from(rowCheckboxes).every(cb => cb
+                                .checked);
+                            updateSelectionDisplay(); // Mettre à jour l'affichage après changement
+                        });
+                    });
+                }
+
+                // Vérifiez si les boutons existent avant d'ajouter les événements
+                $('#acceptAllBtn, #rejectAllBtn, #awaitAllBtn').each(function() {
+                    if (this) {
+                        $(this).on('click', function() {
+                            const action = $(this).data(
+                                'status'); // Récupérer l'action (accept, reject, wait)
+                            const candidats = Array.from(
+                                selectedCandidats); // Convertir le Set en tableau
+
+                            if (candidats.length) {
+                                $.ajax({
+                                    url: `/candidat/${action}`,
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        ids: candidats
+                                    }),
+                                    headers: {
+                                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    },
+                                    success: function(data) {
+                                        const Toast = Swal.mixin({
+                                            toast: true,
+                                            position: "top-end",
+                                            showConfirmButton: false,
+                                            timer: 3000,
+                                            timerProgressBar: true,
+                                            didOpen: (toast) => {
+                                                toast.onmouseenter = Swal
+                                                    .stopTimer;
+                                                toast.onmouseleave = Swal
+                                                    .resumeTimer;
+                                            }
+                                        });
+                                        Toast.fire({
+                                            icon: "success",
+                                            title: data.message
+                                        });
+                                        selectedCandidats.clear(); // Réinitialiser le Set
+                                        updateSelectionDisplay
+                                            (); // Mettre à jour l'affichage
+                                    },
+                                    error: function(xhr) {
+                                        const errorMessage = xhr.responseJSON?.error ||
+                                            'Une erreur est survenue';
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Erreur',
+                                            text: errorMessage,
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
                 // Fonction pour mettre à jour l'affichage des boutons et le compte des sélections
                 function updateSelectionDisplay() {
                     const selectedCount = selectedCandidats.size; // Utiliser la taille du Set
@@ -211,97 +368,21 @@
                     // Mettre à jour l'affichage du compteur
                     $('#candidatTable_info').append(selectedCountDisplay);
                 }
-
-                // Événement pour le checkbox "Sélectionner tout"
-                selectAllCheckbox.addEventListener('change', function() {
-                    rowCheckboxes.forEach(checkbox => {
-                        checkbox.checked = selectAllCheckbox.checked;
-                        const id = checkbox.dataset.id; // Supposant que chaque checkbox a un data-id
-                        if (selectAllCheckbox.checked) {
-                            selectedCandidats.add(id); // Ajouter à l'ensemble si sélectionné
-                        } else {
-                            selectedCandidats.delete(id); // Retirer de l'ensemble si désélectionné
-                        }
-                    });
-                    updateSelectionDisplay(); // Mettre à jour l'affichage après changement
-                });
-
-                // Événement pour les checkboxes de chaque ligne
-                rowCheckboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', function() {
-                        const id = checkbox.dataset.id; // Supposant que chaque checkbox a un data-id
-                        if (checkbox.checked) {
-                            selectedCandidats.add(id); // Ajouter à l'ensemble si coché
-                        } else {
-                            selectedCandidats.delete(id); // Retirer de l'ensemble si décoché
-                        }
-                        // Vérifier si "Sélectionner tout" doit être cochée ou décochée
-                        selectAllCheckbox.checked = Array.from(rowCheckboxes).every(cb => cb.checked);
-                        updateSelectionDisplay(); // Mettre à jour l'affichage après changement
-                    });
-                });
-
-                // Gérer la mise à jour du statut des candidats sélectionnés
-                $('#acceptAllBtn, #rejectAllBtn, #awaitAllBtn').on('click', function() {
-                    const action = $(this).data('status');; // Récupérer l'action (accept, reject, wait)
-                    const candidats = Array.from(selectedCandidats); // Convertir le Set en tableau
-                    //tr = $(event.target.closest('tr'));
-                    //let statusCell = tr.find('#statusCell');
-
-                    if (candidats.length) {
-                        $.ajax({
-                            url: `/candidat/${action}`,
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({
-                                ids: candidats
-                            }),
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                            },
-                            success: function(data) {
-                                const Toast = Swal.mixin({
-                                    toast: true,
-                                    position: "top-end",
-                                    showConfirmButton: false,
-                                    timer: 3000,
-                                    timerProgressBar: true,
-                                    didOpen: (toast) => {
-                                        toast.onmouseenter = Swal.stopTimer;
-                                        toast.onmouseleave = Swal.resumeTimer;
-                                    }
-                                });
-                                Toast.fire({
-                                    icon: "success",
-                                    title: data.message
-                                });
-                                selectedCandidats.clear(); // Réinitialiser le Set
-                                updateSelectionDisplay(); // Mettre à jour l'affichage
-                            },
-                            error: function(xhr) {
-                                const errorMessage = xhr.responseJSON?.error ||
-                                    'Une erreur est survenue';
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Erreur',
-                                    text: errorMessage,
-                                });
-                            }
-                        });
-                    }
-                });
             });
         </script>
 
-        {{-- Script for presence data table --}}
 
+        {{-- Script for presence data table --}}
         <script>
             $(document).ready(function() {
                 $('#candidatpresence').DataTable({
-                    scrollX: true,
                     fixedColumns: {
-                        leftColumns: 3 // Fix the first 3 columns
-                    }
+                        start: 3,
+                    },
+                    paging: false,
+                    scrollCollapse: true,
+                    scrollX: true,
+                    scrollY: 300
                 });
 
                 $('#candidatpresence').css('width', '100%');
@@ -621,7 +702,21 @@
                         method: 'GET',
                         dataType: 'json',
                         success: function(data) {
-                            let events = data.data;
+                            let results = data;
+                            if (data.code && data.code == 401) {
+                                refreshToken();
+
+                                $.ajax({
+                                    url: `${url}/events/show/${idEvent}`,
+                                    method: 'GET',
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        results = data;
+                                    }
+                                })
+                            }
+
+                            let events = results.data;
 
                             let candidats = [];
 
@@ -656,6 +751,7 @@
                         error: function(jqxhr, textStatus, error) {
                             console.error('Erreur lors de la récupération des événements:', textStatus,
                                 error);
+                            showErrorToast("Erreur lors de la récupération des candidats.");
                             syncToast.close(); // Fermer le toast de synchronisation en cas d'erreur
                         }
                     });
@@ -663,6 +759,13 @@
                     showErrorToast("Désolé, une erreur s'est produite lors de la synchronisation des candidats.");
                     syncToast.close(); // Fermer le toast de synchronisation si idEvent est manquant
                 }
+            }
+
+            function refreshToken() {
+                $.ajax({
+                    url: `${url}/generer/token`,
+                    method: 'POST'
+                });
             }
 
             function storeCandidats(candidats, candidatesToast, syncToast) {
@@ -845,8 +948,6 @@
                                 console.error('Erreur lors du stockage de l\'attribut du candidat:', error);
                             });
                     });
-
-
                 }
             }
 

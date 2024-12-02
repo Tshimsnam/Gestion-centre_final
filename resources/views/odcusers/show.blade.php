@@ -14,18 +14,21 @@
                 // Vérifiez si l'extension est .pdf
                 if (extension === 'pdf') {
                     content = `
-            <iframe src="${cvUrl}" style="width: 100%; height: 500px;" frameborder="0"></iframe>
-        `;
+                        <iframe src="${cvUrl}" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                    `;
+                    showSwalForCV(prenom, nom, content);
                 } else if (['jpg', 'jpeg', 'png', 'gif'].includes(extension)) {
                     // Si c'est une image, créez une balise img
                     content = `
-            <img src="${cvUrl}" alt="CV de l'utilisateur" style="width: 100%; height: auto;"/>
-        `;
+                        <img src="${cvUrl}" alt="CV de l'utilisateur" style="width: 100%; height: auto;"/>
+                    `;
+                    showSwalForCV(prenom, nom, content);
                 } else {
-                    // Si ce n'est pas un PDF ou une image, affichez un message d'erreur
-                    content = '<p>Ce fichier n\'est pas un PDF ni une image et ne peut pas être affiché ici.</p>';
+                    //
                 }
+            }
 
+            function showSwalForCV(prenom, nom, content) {
                 // Affichez le modal avec SweetAlert
                 Swal.fire({
                     title: 'CV de  ' + prenom + ' ' + nom,

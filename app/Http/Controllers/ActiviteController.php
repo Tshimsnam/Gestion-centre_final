@@ -156,6 +156,7 @@ class ActiviteController extends Controller
             // Récupérer les utilisateurs et présences
             $odcusers = Odcuser::all(['id', '_id']);
             $presences = Presence::all();
+            $otherActivities = Activite::latest()->take(10)->skip($id)->get();
 
             // Candidats et participants
             $candidats = Candidat::where('activite_id', $id)
@@ -187,7 +188,7 @@ class ActiviteController extends Controller
             return view('activites.show', compact(
                 'participantsData', 'datachart', 'candidatsData', 'labels',
                 'presencesData', 'activite', 'id', 'odcusers', 'fullDates', 'dates',
-                'presences', 'modelMail'
+                'presences', 'modelMail', 'otherActivities'
             ));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Une erreur est survenue : ' . $e->getMessage()], 500);

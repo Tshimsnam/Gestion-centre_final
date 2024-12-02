@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Activités en cours</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -107,7 +107,7 @@
                                             Entrez votre email ou votre numéro de téléphone
                                         </h3>
 
-                                        <button id="closeModal" type="button" 
+                                        <button id="closeModal{{ $item->id }}" onclick="closeModal()" type="button"
                                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
                                             data-modal-toggle="crud-modal{{ $item->id }}">
                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
@@ -158,7 +158,7 @@
                                                             class="block mb-2 w-36 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
                                                         <input type="text" name="firstname" id="firstname"
                                                             class="bg-gray-50 border border-gray-300
-                                 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 
+                                 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
                                  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
                                   dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             required="">
@@ -214,9 +214,7 @@
 
     {{-- La section des scripts --}}
     <script>
-        var button = document.getElementById('closeModal');
-
-        button.onclick = function() {
+        function closeModal(){
             window.location.reload();
         }
     </script>
