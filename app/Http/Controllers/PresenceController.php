@@ -230,6 +230,10 @@ class PresenceController extends Controller
             ->whereDate('date', $date)
             ->exists();
 
+        if ($request->input('createdByAdmin')){
+            return redirect()->back()->with('success', 'Utilisateur créé avec succès.');
+        }
+
         if (!$presenceExists) {
             // Create new presence
             Presence::create([
