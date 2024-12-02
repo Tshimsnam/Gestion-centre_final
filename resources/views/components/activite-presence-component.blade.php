@@ -3,19 +3,20 @@
 <form id="presenceForm" method="POST" action="{{ route('presences.update') }}">
     @csrf
     <div class="py-6 relative overflow-x-auto">
-        <table id="candidatpresence" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <table id="candidatpresence"
+            class="w-full p-6 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th
-                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         Id
                     </th>
                     <th
-                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         FirstName
                     </th>
                     <th
-                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white sticky left-0 z-20">
+                        class="bg-gray-400 px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                         LastName
                     </th>
 
@@ -29,16 +30,18 @@
             </thead>
             <tbody>
                 @foreach ($presencesData as $i => $item)
-                    <tr id="rowAll" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <tr id="rowAll" class="bg-white border dark:bg-gray-800 dark:border-gray-700">
+                        <td scope="col" class="px-6 py-3 bg-gray-400 text-white text-center">
+                            {{ $i + 1 }}
+                        </td>
                         <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
-                            {{ $i + 1 }}</td>
-                        <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
-                            {{ $item['odcuser']['first_name'] }}</td>
+                            {{ $item['odcuser']['first_name'] }}
+                        </td>
                         <td scope="col" class="px-6 py-3 bg-gray-400 text-white">
                             {{ $item['odcuser']['last_name'] }}
                         </td>
                         @foreach ($fullDates as $i => $date)
-                            <td scope="col" class="px-6 py-3">
+                            <td scope="col" class="px-6 py-3 text-center">
                                 @if (in_array($date, $item['date']))
                                     <input type="hidden" name="dates[]" value="{{ $date }}">
 
@@ -50,7 +53,6 @@
                                 @endif
                             </td>
                         @endforeach
-
                     </tr>
                 @endforeach
 
