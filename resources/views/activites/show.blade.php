@@ -10,7 +10,9 @@
     @endif
 
     <style>
-        #candidatpresence tbody tr:hover {
+        #candidatpresence tbody tr:hover,
+        #participantTable tbody tr:hover,
+        #candidatTable tbody tr:hover {
             background-color: #f1f1f1;
         }
     </style>
@@ -248,6 +250,7 @@
             $(document).ready(function() {
                 // Vérifier la présence des éléments dans le DOM avant de les utiliser
                 let selectAllCheckbox = document.getElementById('select-all');
+                let selectedCandidats = new Set();
                 let rowCheckboxes = document.querySelectorAll('.row-select');
                 let selectedCountDisplay = document.createElement('span');
                 selectedCountDisplay.className = "text-gray-200 ms-5";
