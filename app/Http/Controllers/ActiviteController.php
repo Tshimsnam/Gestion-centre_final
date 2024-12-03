@@ -212,7 +212,7 @@ class ActiviteController extends Controller
                 'datachart',
                 'candidatsData',
                 'labels',
-                'data',
+                'presencesData',
                 'activite',
                 'id',
                 'odcusers',
@@ -808,6 +808,4 @@ class ActiviteController extends Controller
 
         return response()->json($candidats, 200);
     }
-
-
 }
