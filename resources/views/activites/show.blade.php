@@ -196,7 +196,26 @@
                                                 e-mail</label>
                                             <input type="email" name="email" id="email"
                                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-72 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                                placeholder="nom@gmail.com" required>
+                                                placeholder="nom@gmail.com">
+                                        </div>
+                                        <div class="col-span-2 flex items-center space-x-4">
+                                            <label for="gender"
+                                                class="block mb-2 text-sm w-52 font-medium text-left text-gray-900 dark:text-white">
+                                                Genre
+                                            </label>
+                                            <select id="gender" name="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-72 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                                <option value="male">Homme</option>
+                                                <option value="female">Femme</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-span-2 flex items-center space-x-4">
+                                            <label for="phone"
+                                                class="block mb-2 text-sm w-52 font-medium text-left text-gray-900 dark:text-white">
+                                                Numéro de téléphone (obligatoire)
+                                            </label>
+                                            <input type="phone" name="phone" id="phone"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-72 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="+216 00 000 000" required>
                                         </div>
                                         <input type="hidden" name="activite" id="activite" value="{{ $activite->id }}">
                                         <input type="hidden" name="createdByAdmin" value="true">

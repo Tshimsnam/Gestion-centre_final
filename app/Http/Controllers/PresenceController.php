@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Odcuser;
 use App\Models\Activite;
 use App\Models\Candidat;
+use App\Models\CandidatAttribute;
 use App\Models\Presence;
 use App\Models\Userlocal;
 use Illuminate\Http\Request;
@@ -202,11 +203,15 @@ class PresenceController extends Controller
         $validated = $request->validate([
             'first_name' => 'required|string',
             'last_name' => 'required|string',
-            'email' => 'required|string|email|unique:odcusers,email',
+            'gender' => 'required',
+            'phone' => 'required|string|max:15',
+            'email' => 'string|email|unique:odcusers,email',
             'activite' => 'required|exists:activites,id'
         ], [
             'first_name.required' => 'Le prénom est obligatoire.',
             'last_name.required' => 'Veuillez renseigner le nom.',
+            'gender.required' => 'Veuillez spécifier le genre.',
+            'phone.required' => 'Le numéro de téléphone est obligatoire.',
             'email.unique' => 'Cette adresse est déjà prise !',
         ]);
 
@@ -215,6 +220,7 @@ class PresenceController extends Controller
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
+            'gender' => $validated['gender'],
         ]);
 
         // Create candidat
@@ -222,6 +228,12 @@ class PresenceController extends Controller
             'odcuser_id' => $userlocal->id,
             'activite_id' => $validated['activite'],
             'status' => 'accept',
+        ]);
+
+        $candidatAttributes = CandidatAttribute::firstOrCreate([
+            'candidat_id' => $candidat->id,
+            'label' => 'phone',
+            'value' => $validated['phone'],
         ]);
 
         // Check if presence already exists
@@ -263,5 +275,6 @@ class PresenceController extends Controller
         session()->forget('confirmation_access');
 
         return view('presences.confirmation');
-    }
+
+   }
 }
