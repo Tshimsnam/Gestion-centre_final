@@ -167,6 +167,104 @@
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js"></script>
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js"></script>
         <script>
+            $(document).ready(function() {
+                $('#createUserBtn').click(function(e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: "Ajouter un participant",
+                        html: `
+                            <div class="mx-auto">
+                                <form id="newUserForm" class="p-4 mx-auto md:p-5" action="{{ route('userlocal') }}" method="POST">
+                                    @csrf
+                                    <div class="grid gap-5 mb-4 grid-cols-2">
+                                        <div class="col-span-2 flex items-center space-x-4">
+                                            <label for="first_name"
+                                                class="block mb-2 text-sm w-52 font-medium text-left text-gray-900 dark:text-white">Prénom</label>
+                                            <input type="text" name="first_name" id="first_name"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-72 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="Prénom" required>
+                                        </div>
+                                        <div class="col-span-2 flex items-center space-x-4">
+                                            <label for="last_name"
+                                                class="block mb-2 text-sm w-52 font-medium text-left text-gray-900 dark:text-white">Nom</label>
+                                            <input type="text" name="last_name" id="last_name"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-72 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="Nom" required>
+                                        </div>
+                                        <div class="col-span-2 flex items-center space-x-4">
+                                            <label for="email"
+                                                class="block mb-2 text-sm w-52 font-medium text-left text-gray-900 dark:text-white">Adresse
+                                                e-mail</label>
+                                            <input type="email" name="email" id="email"
+                                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-72 p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                                placeholder="nom@gmail.com" required>
+                                        </div>
+                                        <input type="hidden" name="activite" id="activite" value="{{ $activite->id }}">
+                                        <input type="hidden" name="createdByAdmin" value="true">
+                                    </div>
+                                    <div class=" flex justify-end mt-4 mb-4">
+                                        <button type="submit" id="submitNewUserForm"
+                                            class="col-span-2 w-52 text-center space-x-2 mx-auto text-white inline-flex items-center bg-odcolor hover:bg-odcolor/75 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 dark:bg-orange-500 dark:hover:bg-orange-400 dark:focus:ring-wite-800">
+                                            <svg class="w-6 h-6 text-white space-x-4" aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path fill-rule="evenodd"
+                                                    d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            <span>Enregistrer</span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        `,
+                        showClass: {
+                            popup: `
+                            animate__animated
+                            animate__fadeInUp
+                            animate__faster
+                            `
+                        },
+                        hideClass: {
+                            popup: `
+                            animate__animated
+                            animate__fadeOutDown
+                            animate__faster
+                            `
+                        },
+                        showConfirmButton: false,
+                        preConfirm: () => {
+                            const formData = new FormData($('#newUserForm')[0]);
+
+                            const first_name = formData.get('first_name');
+                            const last_name = formData.get('last_name');
+                            const email = formData.get('email');
+                            const createdByAdmin = true;
+
+                            formData.append('createdByAdmin', createdByAdmin);
+                            if (!first_name || !last_name || !email) {
+                                Swal.showValidationMessage(
+                                    'Veuillez remplir tous les champs requis.');
+                                return false;
+                            }
+
+                            formData.append('_token',
+                                '{{ csrf_token() }}');
+
+
+                            return {
+                                first_name: first_name,
+                                last_name: last_name,
+                                email: email,
+                                createdByAdmin: createdByAdmin,
+                                _token: formData.get('_token')
+                            };
+                        }
+                    });
+                });
+            })
+        </script>
+        <script>
             document.addEventListener("DOMContentLoaded", function() {
                 // Get all checkboxes in the table
                 const checkboxes = document.querySelectorAll('.checkbox');
