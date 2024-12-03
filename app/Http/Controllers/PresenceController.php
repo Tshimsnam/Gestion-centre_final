@@ -205,7 +205,7 @@ class PresenceController extends Controller
             'last_name' => 'required|string',
             'gender' => 'required',
             'phone' => 'required|string|max:15',
-            'email' => 'string|email|unique:odcusers,email',
+            'email' => 'nullable|string|email|unique:odcusers,email',
             'activite' => 'required|exists:activites,id'
         ], [
             'first_name.required' => 'Le prénom est obligatoire.',
