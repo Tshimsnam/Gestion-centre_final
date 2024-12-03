@@ -156,6 +156,7 @@ class ActiviteController extends Controller
             // Récupérer les utilisateurs et présences
             $odcusers = Odcuser::all(['id', '_id']);
             $presences = Presence::all();
+            $otherActivities = Activite::latest()->take(10)->skip($id)->get();
 
             // Candidats et participants
             $candidats = Candidat::where('activite_id', $id)

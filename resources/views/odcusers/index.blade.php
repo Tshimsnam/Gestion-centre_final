@@ -1,30 +1,35 @@
 <x-app-layout>
+    <style>
+        #usersTable tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <div class="w-full">
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-100 leading-tight text-left">
-                    {{ __('Liste des utilisateurs') }}
+                    {{ __('Liste des apprenants') }}
                 </h2>
             </div>
         </div>
     </x-slot>
 
-    <div class=" w-full bg-[#fcdab40a] darj p-4 rounded-lg bg-opacity-5 relative">
+    <div class="w-full bg-[#fcdab40a] darj p-4 rounded-lg bg-opacity-5 relative shadow-lg">
         <!-- Header -->
         <div
-            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700">
+            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700 shadow-md border-l-8 hover:border-l-10">
             <div>
                 <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
                     Apprenants
                 </h2>
                 <p class="text-sm text-gray-600 dark:text-neutral-400">
-                    Consultez tous les apprenants ayant un compte à l'Orange Digital Center et voyez les détails pour chacun.
+                    Consultez tous les apprenants ayant un compte à l'Orange Digital Center et voyez les détails pour
+                    chacun.
                 </p>
             </div>
 
             <div>
                 <div class="inline-flex gap-x-2">
-
                     <form class="w-full mx-auto">
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -36,14 +41,12 @@
                                         stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" data-modal-target="search-user" data-modal-toggle="search-user"
+                            <input type="search" onclick="openModal()" data-modal-target="search-user"
+                                data-modal-toggle="search-user"
                                 class="block w-60 p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Rechercher un utilisateur" required />
-
                         </div>
                     </form>
-
-
 
                     @section('modal')
                         <!-- Main modal -->
@@ -69,10 +72,10 @@
                                             <span class="sr-only">Close modal</span>
                                         </button>
                                     </div>
+
                                     <!-- Modal body -->
                                     <div class="p-4 md:p-5 space-y-4 relative overflow-x-auto" id="resultsContainer">
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -82,39 +85,40 @@
         </div>
 
         <div class="py-6 relative overflow-x-auto">
-            <table id="usersTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <table id="usersTable"
+                class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
+                    <tr class=" dark:bg-gray-800 dark:border-gray-700">
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Prénom
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Nom
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Email
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Sexe
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Date de naissance
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Profession
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Spécialité
                         </th>
                         <th scope="col"
-                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            class="px-6 py-3 dark:bg-gray-800 dark:border-gray-700 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Voir
                         </th>
                     </tr>
@@ -126,7 +130,7 @@
     </div>
 
     @section('script')
-            <script>
+        <script>
             $(document).ready(function() {
                 var typingTimer;
                 var doneTypingInterval = 500;
@@ -134,7 +138,6 @@
                 $('#search').on('keyup', function() {
                     clearTimeout(typingTimer);
                     typingTimer = setTimeout(searchOdcusers);
-
                 });
 
                 $('#search').on('keydown', function() {
@@ -147,12 +150,11 @@
                         .trim();
 
                     if (searchInput === '') {
-
                         $('#resultsContainer').html('<p>Veuillez entrer un terme de recherche.</p>');
                         return;
                     }
-                    if (searchInput.length < 3) {
 
+                    if (searchInput.length < 3) {
                         $('#resultsContainer').html('<p>Veuillez entrer au moins 3 caractères.</p>');
                         return;
                     }
@@ -172,8 +174,6 @@
                                     '<p class=" text-red-500">Aucun résultat trouvé.</p>');
                             } else {
                                 var htmlContent = '';
-
-                                console.log(response);
 
                                 response.forEach(function(odcuser) {
                                     htmlContent += `
@@ -200,6 +200,14 @@
                 }
             });
         </script>
+        <script>
+            function openModal() {
+                const modal = document.getElementById('search-user').classList.remove('hidden');
+                const inputField = document.getElementById('search').focus();
+            }
+        </script>
+
+
         <script type="text/javascript">
             $(document).ready(function() {
                 $('#usersTable').DataTable({
