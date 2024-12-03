@@ -2,7 +2,7 @@
 
 <div class="overflow-x-auto">
     <table id="participationsTable" class="min-w-full text-xs sm:text-sm md:text-base text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase border-b bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     N°
@@ -33,7 +33,7 @@
                     <td scope="col" class="px-6 py-3">
                         {{ $i + 1 }}
                     </td>
-                    <td scope="col" class="px-6 py-3">
+                    <td scope="col" class="px-6 py-3 hover:underline">
                         <a href="{{ route('activites.show', $item->id) }}">{{ $item->title }}</a>
                     </td>
                     <td scope="col" class="px-6 py-3">

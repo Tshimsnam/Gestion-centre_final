@@ -8,11 +8,11 @@
 </style>
 <section class=" w-full p-4 flex justify-between gap-8">
     <div class="">
-        <div class="bg-[#fcdab40a] shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg text-center">
+        <div class="bg-[#7357120a] border shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg text-center">
             <div class="">
                 <div class=" flex justify-center">
                     <img src="{{ $odcuser->picture }}" alt=""
-                        class=" w-28 h-28 rounded-full object-cover border-4 border-white">
+                        class=" w-28 h-28 rounded-full object-cover border-4 border-gray-700 dark:border-white">
                 </div>
             </div>
             <div class="mb-4">
@@ -20,7 +20,11 @@
                     class="text-4xl mb-2 font-extrabold leading-none tracking-tight text-gray-700 md:text-5xl lg:text-5xl dark:text-white">
                     {{ $odcuser->first_name }} {{ $odcuser->last_name }}</h2>
                 <p class="text-sm text-gray-400">{{ $odcuser->email }}</p>
-                <a href="#" onclick="showUserCV(event, '{{ $odcuser->user_cv }}', '{{$odcuser->first_name}}', '{{$odcuser->last_name}}')" class="text-sm hover:underline text-gray-400">Voir le CV</a>
+                @if ($odcuser->hasCV)
+                    <a href="#" id="showCVLink"
+                        onclick="showUserCV(event, '{{ $odcuser->user_cv }}', '{{ $odcuser->first_name }}', '{{ $odcuser->last_name }}')"
+                        class="text-sm hover:underline text-gray-400">Voir le CV</a>
+                @endif
             </div>
 
             <div class=" flex justify-between gap-5 text-center">
@@ -54,7 +58,7 @@
         </div>
 
         <div
-            class=" bg-[#fcdab40a] shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg text-lg font-normal text-gray-500 lg:text-sm  dark:text-gray-400">
+            class=" bg-[#7357120a] border shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg text-lg font-normal text-gray-500 lg:text-sm  dark:text-gray-400">
 
             <div
                 class="mb-1.5 text-4xl font-extrabold leading-none tracking-tight text-gray-700 md:text-2xl lg:text-2xl dark:text-white">
@@ -91,7 +95,8 @@
         @endforeach
 
         <div class=" text-left">
-            <p> LinkedIn : <span><a class="hover:underline" href="{{ $odcuser->linkedin }}">{{ $odcuser->linkedin }}</a></span></p>
+            <p> LinkedIn : <span><a class="hover:underline"
+                        href="{{ $odcuser->linkedin }}">{{ $odcuser->linkedin }}</a></span></p>
         </div>
 
         <div class=" text-left">
@@ -111,7 +116,7 @@
         </div>
     </div>
 </div>
-<div class=" bg-[#fcdab40a] shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg w-full">
+<div class=" bg-[#7357120a] border shadow-lg dark:shadow-lg dark:shadow-gray-500/20 p-4 mb-4 rounded-lg w-full">
     <div class=" flex justify-between mb-4 items-center">
         <h3
             class="text-4xl font-extrabold leading-none tracking-tight text-gray-700 md:text-2xl lg:text-2xl dark:text-white">

@@ -62,13 +62,7 @@
                                     </div>
                                 </li>
                             @endif
-                            <li class="inline-flex items-center">
-                                <a href="#"
-                                    class="inline-flex space-x-2 items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
-                                    @yield('svg')
-                                    {{ $header }}
-                                </a>
-                            </li>
+                            {{ $header }}
                         </ol>
                     </nav>
                 @endif

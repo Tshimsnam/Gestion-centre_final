@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^41.4.2",
+        "animate.css": "^4.1.1",
         "apexcharts": "^3.52.0",
         "assemblyai": "^4.4.5",
         "chart.js": "^4.4.3",

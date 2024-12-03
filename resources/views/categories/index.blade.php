@@ -127,7 +127,6 @@
                                     <li>
                                         <a href="{{ route('candidats.destroy', $item->id) }}"
                                             class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            data-modal-target="delete" data-modal-toggle="delete"
                                             onclick="delete(event)">Delete</a>
                                     </li>
                                     <li>
@@ -153,9 +152,7 @@
     @section('script')
         <script>
             function delete(event) {
-
                 event.preventDefault()
-
             }
         </script>
         <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="

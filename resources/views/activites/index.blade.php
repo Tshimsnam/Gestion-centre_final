@@ -4,9 +4,7 @@
         @foreach ($errors->all() as $error)
             <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-red-400"
                 role="alert">
-
                 <span class="font-medium">{{ $error }}</span>
-
             </div>
         @endforeach
     @endif
@@ -22,18 +20,11 @@
                     </svg>
                 @endsection
                 <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    {{ __('Gestion Activités') }}
+                    {{ __('Gestion des activités') }}
                 </h2>
             </div>
-
-
-
         </div>
-
-
     </x-slot>
-
-
 
     @if (Session('success'))
         <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
@@ -57,7 +48,6 @@
 
             <div>
                 <div class="inline-flex gap-x-2">
-
                     <form class="max-w-md mx-auto">
                         <label for="default-search"
                             class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -69,16 +59,16 @@
                                         stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input type="search" data-modal-target="static-modal" data-modal-toggle="static-modal"
+                            <input type="search" onclick="openModal()" data-modal-target="search-activities"
+                                data-modal-toggle="search-activities"
                                 class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Rechercher des Activites ..."  />
-
+                                placeholder="Rechercher des Activites ..." />
                         </div>
                     </form>
 
                     @section('modal')
                         <!-- Main modal -->
-                        <div id="static-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
+                        <div id="search-activities" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
                             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
                             <div class="relative p-4 w-full max-w-2xl max-h-full">
                                 <!-- Modal content -->
@@ -91,7 +81,7 @@
                                             placeholder="Rechercher des Activites ..." required />
                                         <button type="button"
                                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                            data-modal-hide="static-modal">
+                                            data-modal-hide="search-activities">
                                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                                 fill="none" viewBox="0 0 14 14">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -102,12 +92,7 @@
                                     </div>
                                     <!-- Modal body -->
                                     <div class="p-4 md:p-5 space-y-4 relative overflow-x-auto block" id="resultsContainer">
-
-
-
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -125,7 +110,6 @@
 
                         Exporter
                     </button>
-
 
                     <div id="dropdownInformation"
                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
@@ -204,6 +188,7 @@
                 </div>
             </div>
         </div>
+
         <table id="table"
             class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border display">
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -274,26 +259,26 @@
                             } else {
                                 var htmlContent = '';
 
-                                console.log(response);
+                                let host = window.location.origin;
 
                                 response.forEach(function(activite) {
                                     htmlContent += `
                                        <div class=" block items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
-                                                    <a href="http://127.0.0.1:8000/activites/${activite.id}"
-                                                        class="inline-flex">
+                                            <a href="${host}/activites/${activite.id}"
+                                                class="inline-flex">
 
-                                                        <span class="w-full">${activite.title}</span>
-                                                        <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                                                            fill="none" viewBox="0 0 14 10">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M1 5h12m0 0L9 1m4 4L9 9" />
-                                                        </svg>
-                                                        <br>
+                                                <span class="w-full">${activite.title}</span>
+                                                <svg class="w-4 h-4 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 14 10">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M1 5h12m0 0L9 1m4 4L9 9" />
+                                                </svg>
+                                                <br>
 
-                                                    </a>
-                                                     <p>${activite.start_date}</p>
-                                                       </div>
-                    `;
+                                            </a>
+                                            <p>${activite.start_date}</p>
+                                        </div>
+                                        `;
                                 });
                                 resultsContainer.html(htmlContent);
                             }
@@ -304,7 +289,13 @@
                     });
                 }
             });
+
+            function openModal() {
+                const modal = document.getElementById('search-activities').classList.remove('hidden')
+                const inputField = document.getElementById('search').focus()
+            }
         </script>
+
         <script>
             $(document).ready(function() {
                 $(document).on('click', '.btnModal', function() {
@@ -328,6 +319,7 @@
 
             });
         </script>
+
         <script>
             function destroy(event, url) {
                 event.preventDefault();
