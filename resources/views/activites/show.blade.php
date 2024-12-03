@@ -54,14 +54,14 @@
                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                         <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
                             aria-labelledby="dropDownListActivities">
-                            @foreach ($otherActivities as $event)
+                            {{-- @foreach ($otherActivities as $event)
                                 <li>
                                     <a href="{{ route('activites.show', $event->id) }}"
                                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                         {{ $event->title }}
                                     </a>
                                 </li>
-                            @endforeach
+                            @endforeach --}}
                         </ul>
                         <div class="py-2">
                             <a href="{{ route('activites.index') }}"
@@ -199,6 +199,54 @@
     @endphp
 
     @section('script')
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Récupérer l'ID de l'onglet actif depuis localStorage
+                const activeTabId = localStorage.getItem("activeTab");
+
+                // Si un ID est trouvé, activer l'onglet correspondant
+                if (activeTabId) {
+                    const activeTabButton = document.querySelector(`#${activeTabId}`);
+                    const activeTabContentId = activeTabButton?.getAttribute("data-tabs-target");
+
+                    if (activeTabButton && activeTabContentId) {
+                        // Activer le bouton
+                        document.querySelectorAll("[role='tab']").forEach(tab => {
+                            tab.classList.remove("text-purple-600", "border-purple-600");
+                            tab.classList.add("hover:text-gray-600", "hover:border-gray-300");
+                        });
+                        activeTabButton.classList.add("text-purple-600", "border-purple-600");
+
+                        // Activer le contenu
+                        document.querySelectorAll("[role='tabpanel']").forEach(panel => {
+                            panel.classList.add("hidden");
+                        });
+                        document.querySelector(activeTabContentId)?.classList.remove("hidden");
+                    }
+                }
+
+                // Ajouter un écouteur d'événement pour sauvegarder l'onglet actif
+                const tabs = document.querySelectorAll("[role='tab']");
+                tabs.forEach(tab => {
+                    tab.addEventListener("click", () => {
+                        const targetId = tab.id;
+                        localStorage.setItem("activeTab",
+                            targetId); // Enregistrer l'ID de l'onglet actif
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+                const dataTable = new simpleDatatables.DataTable("#search-table", {
+                    searchable: true,
+                    sortable: true
+                });
+            }
+        </script>
+
+
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js"></script>
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js"></script>
         <script>
@@ -343,10 +391,10 @@
                                         ${i+1}
                                     </th>
                                     <td class="px-6 py-4">
-                                        ${data.firstName}
+                                        ${data.first_name}
                                     </td>
                                     <td class="px-6 py-4">
-                                        ${data.lastName}
+                                        ${data.last_name}
                                     </td>
                                     <td class="px-6 py-4">
                                         ${data.gender}
@@ -1213,101 +1261,7 @@
                 document.querySelector('#activeStatus form').setAttribute('action', link);
             }
         </script>
-        <script>
-            const getChartOptions = () => {
-                return {
-                    series: [
 
-                        @json([$datachart->sum('total_filles')]), // Total des filles
-                        @json([$datachart->sum('total_garcons')]),
-                        // Total des garçons
-                    ],
-                    colors: ["#1C64F2", "#16BDCA", "#FDBA8C"],
-                    chart: {
-                        height: "380px",
-                        width: "100%",
-                        type: "radialBar",
-                        sparkline: {
-                            enabled: true,
-                        },
-                    },
-                    stroke: {
-                        colors: ["transparent"],
-                        lineCap: "round", // Use 'round' for the end caps of the radial bar
-                    },
-                    plotOptions: {
-                        radialBar: {
-                            track: {
-                                background: '#E5E7EB',
-                            },
-                            dataLabels: {
-                                show: false,
-                            },
-                            hollow: {
-                                margin: 0,
-                                size: "32%",
-                            },
-                            donut: {
-                                labels: {
-                                    show: true,
-                                    name: {
-                                        show: true,
-                                        fontFamily: "Inter, sans-serif",
-                                        offsetY: 20,
-                                    },
-
-                                    value: {
-                                        show: true,
-                                        fontFamily: "Inter, sans-serif",
-                                        offsetY: -20,
-                                        formatter: function(value) {
-                                            return value; // Afficher la valeur brute
-                                        },
-                                    },
-                                },
-                                size: "70%",
-                            },
-                        },
-                    },
-                    grid: {
-                        show: false,
-                        strokeDashArray: 4,
-                        padding: {
-                            left: 2,
-                            right: 2,
-                            top: -23,
-                            bottom: -20,
-                        },
-                    },
-                    labels: ["Femme", "Homme"], // Étiquettes pour les séries
-                    dataLabels: {
-                        enabled: false,
-                    },
-                    legend: {
-
-                        show: true,
-                        position: "bottom",
-                        fontFamily: "Inter, sans-serif",
-                    },
-                    tooltip: {
-                        enabled: true,
-                        x: {
-                            show: false,
-                        },
-                    },
-                    yaxis: {
-                        show: false,
-
-                    }
-                }
-            }
-
-            document.addEventListener('DOMContentLoaded', function() {
-                const options = getChartOptions();
-                const chart = new ApexCharts(document.querySelector("#chart"), options);
-                chart.render();
-            });
-        </script>
         <script>
             function choix_certificat(event) {
                 event.preventDefault();

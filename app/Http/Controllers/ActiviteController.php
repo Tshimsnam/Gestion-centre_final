@@ -179,24 +179,23 @@ class ActiviteController extends Controller
 
             // Récupérer les présences associées aux candidats
             $presencesData = $this->getCandidatsPresenceData($participants);
-
             // Données pour le graphique
             $datachart = $this->getCandidatsChartData($id);
 
             $modelMail = ModelMail::all();
 
             $criteres = Critere::where('activite_id', $activite->id)->get();
-            $candidats = Candidat::where('activite_id', $activite->_id)->get();
-            $participants = Candidat::where('activite_id', $activite->_id)->where('status', 'accepted')->get();
-            $total_p = Candidat::where('activite_id', $activite->_id)->where('status', 'Accepted')->get()->count();
-            $total_ih = Candidat::where('activite_id', $activite->_id)
+            $candidats = Candidat::where('activite_id', $activite->id)->get();
+            $participants = Candidat::where('activite_id', $activite->id)->where('status', 'accepted')->get();
+            $total_p = Candidat::where('activite_id', $activite->id)->where('status', 'Accepted')->get()->count();
+            $total_ih = Candidat::where('activite_id', $activite->id)
                 ->whereHas('odcuser', function ($query) {
                     $query->where('gender', 'like', 'male');
                 })
                 ->get()->count();
 
-            $total_ph = Candidat::where('activite_id', $activite->_id)
-                ->where('status', 'Accepted')
+            $total_ph = Candidat::where('activite_id', $activite->id)
+                ->where('status', 'Accept')
                 ->whereHas('odcuser', function ($query) {
                     $query->where('gender', 'like', 'male');
                 })
