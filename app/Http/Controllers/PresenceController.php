@@ -199,42 +199,59 @@ class PresenceController extends Controller
 
     public function userlocal(Request $request)
     {
-        // Validate incoming data
-        $validated = $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'gender' => 'required',
-            'phone' => 'required|string|max:15',
-            'email' => 'nullable|string|email|unique:odcusers,email',
-            'activite' => 'required|exists:activites,id'
-        ], [
-            'first_name.required' => 'Le prénom est obligatoire.',
-            'last_name.required' => 'Veuillez renseigner le nom.',
-            'gender.required' => 'Veuillez spécifier le genre.',
-            'phone.required' => 'Le numéro de téléphone est obligatoire.',
-            'email.unique' => 'Cette adresse est déjà prise !',
-        ]);
+        $odcuser = Odcuser::where('email', $request->input('email'))->first();
 
-        // Create or update ODC user
-        $userlocal = Odcuser::firstOrCreate([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'gender' => $validated['gender'],
-        ]);
+        if ($odcuser) {
+            // Create candidat
+            $candidat = Candidat::firstOrCreate([
+                'odcuser_id' => $odcuser->id,
+                'activite_id' => $request->input('activite'),
+                'status' => 'accept',
+            ]);
 
-        // Create candidat
-        $candidat = Candidat::firstOrCreate([
-            'odcuser_id' => $userlocal->id,
-            'activite_id' => $validated['activite'],
-            'status' => 'accept',
-        ]);
+            $candidatAttributes = CandidatAttribute::firstOrCreate([
+                'candidat_id' => $candidat->id,
+                'label' => 'Téléphone',
+                'value' => $request->input('phone')
+            ]);
+        } else {
+            // Validate incoming data
+            $validated = $request->validate([
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'gender' => 'required',
+                'phone' => 'required|string|max:15',
+                'email' => 'nullable|string|email|unique:odcusers,email',
+                'activite' => 'required|exists:activites,id'
+            ], [
+                'first_name.required' => 'Le prénom est obligatoire.',
+                'last_name.required' => 'Veuillez renseigner le nom.',
+                'gender.required' => 'Veuillez spécifier le genre.',
+                'phone.required' => 'Le numéro de téléphone est obligatoire.',
+                'email.unique' => 'Cette adresse est déjà prise !',
+            ]);
 
-        $candidatAttributes = CandidatAttribute::firstOrCreate([
-            'candidat_id' => $candidat->id,
-            'label' => 'phone',
-            'value' => $validated['phone'],
-        ]);
+            // Create or update ODC user
+            $userlocal = Odcuser::firstOrCreate([
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'email' => $validated['email'],
+                'gender' => $validated['gender'],
+            ]);
+
+            // Create candidat
+            $candidat = Candidat::firstOrCreate([
+                'odcuser_id' => $userlocal->id,
+                'activite_id' => $validated['activite'],
+                'status' => 'accept',
+            ]);
+
+            $candidatAttributes = CandidatAttribute::firstOrCreate([
+                'candidat_id' => $candidat->id,
+                'label' => 'Téléphone',
+                'value' => $validated['phone'],
+            ]);
+        }
 
         // Check if presence already exists
         $date = now()->format('Y-m-d');
@@ -242,8 +259,8 @@ class PresenceController extends Controller
             ->whereDate('date', $date)
             ->exists();
 
-        if ($request->input('createdByAdmin')){
-            return redirect()->back()->with('success', 'Utilisateur créé avec succès.');
+        if ($request->input('createdByAdmin')) {
+            return redirect()->back()->with('success', 'Le participant a été ajouté à l\'activité avec succès !.');
         }
 
         if (!$presenceExists) {
@@ -275,6 +292,5 @@ class PresenceController extends Controller
         session()->forget('confirmation_access');
 
         return view('presences.confirmation');
-
-   }
+    }
 }
