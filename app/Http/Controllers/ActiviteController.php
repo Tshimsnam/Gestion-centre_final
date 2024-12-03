@@ -2,33 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Carbon\Carbon;
 use App\Models\Form;
+use Ramsey\Uuid\Uuid;
 use App\Models\Hashtag;
 use App\Models\Odcuser;
 use App\Models\Activite;
 use App\Models\Candidat;
 use App\Models\Presence;
 use App\Models\Categorie;
+use App\Models\ModelMail;
 use App\Models\TypeEvent;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Models\CourseraUsage;
 use App\Models\CourseraMember;
-use App\Models\CandidatAttribute;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use App\Models\CourseraSpecialisation;
-use App\Models\ModelMail;
-use Ramsey\Uuid\Uuid;
-
-use function PHPUnit\Framework\isEmpty;
+use App\Models\Critere;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActiviteController extends Controller
 {
+
+    private $id_event;
+    private $candidat;
 
     public function index()
     {
@@ -185,10 +185,51 @@ class ActiviteController extends Controller
 
             $modelMail = ModelMail::all();
 
+            $criteres = Critere::where('activite_id', $activite->id)->get();
+            $candidats = Candidat::where('activite_id', $activite->_id)->get();
+            $participants = Candidat::where('activite_id', $activite->_id)->where('status', 'accepted')->get();
+            $total_p = Candidat::where('activite_id', $activite->_id)->where('status', 'Accepted')->get()->count();
+            $total_ih = Candidat::where('activite_id', $activite->_id)
+                ->whereHas('odcuser', function ($query) {
+                    $query->where('gender', 'like', 'male');
+                })
+                ->get()->count();
+
+            $total_ph = Candidat::where('activite_id', $activite->_id)
+                ->where('status', 'Accepted')
+                ->whereHas('odcuser', function ($query) {
+                    $query->where('gender', 'like', 'male');
+                })
+                ->get()->count();
+            $total_pf = $total_p - $total_ph;
+            $total_if = $candidats->count() - $total_ih;
+
+            $date1 = new DateTime($activite->startDate);
+            $date2 = new DateTime($activite->endDate);
+            $nbj = date_diff($date1, $date2)->days + 1;
+
             return view('activites.show', compact(
-                'participantsData', 'datachart', 'candidatsData', 'labels',
-                'presencesData', 'activite', 'id', 'odcusers', 'fullDates', 'dates',
-                'presences', 'modelMail', 'otherActivities'
+                'participantsData',
+                'datachart',
+                'candidatsData',
+                'labels',
+                'presencesData',
+                'activite',
+                'id',
+                'odcusers',
+                'fullDates',
+                'dates',
+                'presences',
+                'modelMail',
+                "candidats",
+                "total_ih",
+                "total_if",
+                "total_ph",
+                "total_pf",
+                "total_p",
+                "participants",
+                "nbj",
+                "criteres"
             ));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Une erreur est survenue : ' . $e->getMessage()], 500);
@@ -260,8 +301,6 @@ class ActiviteController extends Controller
             ->groupBy('activites.title')
             ->get();
     }
-
-
 
     public function edit(Activite $activite)
     {
@@ -729,5 +768,45 @@ class ActiviteController extends Controller
         }
 
         return view('activites.parcour', compact('candidats'));
+    }
+
+    public function rapport_event(Activite $activite)
+    {
+        $criteres = Critere::where('event_id', $activite->id)->get();
+        $candidats = Candidat::where('id_event', $activite->_id)->get();
+        $participants = Candidat::where('id_event', $activite->_id)->where('status', 'accepted')->get();
+        $total_p = Candidat::where('id_event', $activite->_id)->where('status', 'Accepted')->get()->count();
+        $total_ih = Candidat::where('id_event', $activite->_id)
+            ->whereHas('odcuser', function ($query) {
+                $query->where('gender', 'like', 'male');
+            })
+            ->get()->count();
+
+        $total_ph = Candidat::where('id_event', $activite->_id)
+            ->where('status', 'Accepted')
+            ->whereHas('odcuser', function ($query) {
+                $query->where('gender', 'like', 'male');
+            })
+            ->get()->count();
+        $total_pf = $total_p - $total_ph;
+        $total_if = $candidats->count() - $total_ih;
+
+        $date1 = new DateTime($activite->startDate);
+        $date2 = new DateTime($activite->endDate);
+        $nbj = date_diff($date1, $date2)->days + 1;
+
+
+
+        return view('events.rapport', compact("activite$activite", "candidats", "total_ih", "total_if", "total_ph", "total_pf", "total_p", "participants", "nbj", "criteres"));
+    }
+
+    public function nouveaux(Activite $event)
+    {
+
+        $this->id_event = $event->id;
+        //return response()->json(['pays'=>"congo"]);
+        $candidats = DB::select("SELECT firstName, lastName, gender, candidats.id, odcuser_id FROM `candidats`, `odcusers` WHERE candidats.odcuser_id = odcusers.id AND event_id = " . $event->id . " AND odcuser_id NOT IN (SELECT odcuser_id FROM candidats WHERE event_id <> " . $event->id . ")");
+
+        return response()->json($candidats, 200);
     }
 }
