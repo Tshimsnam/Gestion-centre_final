@@ -253,7 +253,7 @@ class PresenceController extends Controller
                 'date' => $date
             ]);
         } else {
-            return redirect()->route('presences.activitencours')->with('error', 'La présence de ce candidat pour ce jour existe déjà');
+            return redirect()->route('activitencours')->with('error', 'La présence de ce candidat pour ce jour existe déjà');
         }
 
         return view('presences.confirmation')->with('success', 'Utilisateur créé avec succès.');
