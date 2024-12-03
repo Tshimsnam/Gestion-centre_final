@@ -156,7 +156,7 @@ class ActiviteController extends Controller
             // Récupérer les utilisateurs et présences
             $odcusers = Odcuser::all(['id', '_id']);
             $presences = Presence::all();
-            $otherActivities = Activite::latest()->take(10)->skip($id)->get();
+            $otherActivities = Activite::latest()->take(5)->skip($id)->get();
 
             // Candidats et participants
             $candidats = Candidat::where('activite_id', $id)
@@ -210,6 +210,7 @@ class ActiviteController extends Controller
 
             return view('activites.show', compact(
                 'participantsData',
+                'otherActivities',
                 'datachart',
                 'candidatsData',
                 'labels',

@@ -6,6 +6,7 @@ import Chart from "chart.js/auto";
 import './components/kendo.all.min'
 import './components/kendo.actionsheet'
 import Swal from 'sweetalert2';
+import 'animate.css';
 
 window.Swal = Swal;
 

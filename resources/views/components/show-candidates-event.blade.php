@@ -21,8 +21,8 @@
         </svg>
     </button>
 </div>
-<div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-dashboard" role="tabpanel"
-    aria-labelledby="dashboard-tab">
+<div class="p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-candidats" role="tabpanel"
+    aria-labelledby="candidats-tab">
 
     <div class="flex justify-between">
         <a href="#" onclick="reload()"
@@ -49,12 +49,14 @@
 
     <div class="py-6 relative overflow-x-auto">
         @if ($candidatsData)
-            <table id="candidatTable" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
+            <table id="candidatTable"
+                class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="p-4">
                             <div class="flex items-center">
-                                <input id="select-all" type="checkbox" class="w-4 h-4 text-[#FF7322] hover:cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                <input id="select-all" type="checkbox"
+                                    class="w-4 h-4 text-[#FF7322] hover:cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="select-all" class="sr-only">checkbox</label>
                             </div>
                         </th>
@@ -66,6 +68,24 @@
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             Nom
                         </th>
+                        <!-- Email column -->
+                        @if (!in_array('Email', $labels) ||
+                                in_array('E-mail', $labels) ||
+                                in_array('E-mail(obligatoire)', $labels) ||
+                                in_array('Adresse Email', $labels))
+                            <th scope="col"
+                                class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                Email
+                            </th>
+                        @endif
+                        <!-- Genre column -->
+                        @if (in_array('Civilié', $labels) || in_array('Civilité', $labels))
+                            <th scope="col"
+                                class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                Genre
+                            </th>
+                        @endif
+                        <!-- Dynamic labels -->
                         @foreach (array_unique($labels) as $label)
                             @if (isset($label))
                                 @if (in_array($label, [
@@ -118,13 +138,27 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 hover:cursor-pointer hover:underline">
                             <td class="w-4 p-4">
                                 <div class="flex items-center">
-                                    <input id="checkbox{{ $candidat['id'] }}" data-id="{{ $candidat['id'] }}" type="checkbox" class="row-select w-4 h-4 hover:cursor-pointer text-[#FF7322] bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <input id="checkbox{{ $candidat['id'] }}" data-id="{{ $candidat['id'] }}"
+                                        type="checkbox"
+                                        class="row-select w-4 h-4 hover:cursor-pointer text-[#FF7322] bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="checkbox{{ $candidat['id'] }}" class="sr-only">checkbox</label>
                                 </div>
                             </td>
-                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3">{{ $candidat['odcuser']['first_name'] }}</td>
-                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3">{{ $candidat['odcuser']['last_name'] }}</td>
-
+                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3">
+                                {{ $candidat['odcuser']['first_name'] }}</td>
+                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3">
+                                {{ $candidat['odcuser']['last_name'] }}</td>
+                            <!-- Email Column -->
+                            @if (!in_array('Email', $labels) ||
+                                    in_array('E-mail', $labels) ||
+                                    in_array('E-mail(obligatoire)', $labels) ||
+                                    in_array('Adresse Email', $labels))
+                                <td>{{ $candidat['odcuser']['email'] }}</td>
+                            @endif
+                            <!-- Genre Column -->
+                            @if (in_array('Civilié', $labels) || in_array('Civilité', $labels))
+                                <td>{{ $candidat['odcuser']['gender'] }}</td>
+                            @endif
                             @foreach (array_unique($labels) as $label)
                                 @if (isset($label))
                                     @if (in_array($label, [
@@ -152,14 +186,16 @@
                                         ]))
                                         <td class="px-6 py-3">{{ $candidat[$label] ?? 'N/A' }}</td>
                                     @elseif ($label !== 'Cv de votre parcours (Obligatoire)')
-                                        <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="label px-6 py-3">{{ $candidat[$label] ?? 'N/A' }}</td>
+                                        <td onclick="showDetail(event,  '{{ $candidat['id'] }}')"
+                                            class="label px-6 py-3">{{ $candidat[$label] ?? 'N/A' }}</td>
                                     @endif
                                 @endif
                             @endforeach
 
-                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3" id="statusCell">{{ $candidat['status'] }}</td>
+                            <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3"
+                                id="statusCell">{{ $candidat['status'] }}</td>
                             <td class="px-6 py-3 flex space-x-3">
-                                <!-- Si le statut est decline, on peut donc soit accepter soit mettre en attente -->
+                                <!-- Actions and status condition handling -->
                                 @if ($candidat['status'] == 'decline')
                                     <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
                                         class="text-white hover:text-[#FF7322] cursor-pointer"
@@ -170,138 +206,13 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
                                     </svg>
-                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Accepter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-
-                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Mettre en attente
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                    {{-- Si le statut est new, on affiche tout --}}
-                                @elseif ($candidat['status'] == 'new')
-                                    <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        onclick="actionStatus(event, 'accept', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}')"
-                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                    </svg>
-                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Accepter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-
-                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Mettre en attente
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-
-                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
-                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 2048 2048">
-                                        <path fill="currentColor"
-                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
-                                    </svg>
-                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Rejeter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-
-                                    <!-- Si le statut est wait, on peut donc soit accepter soit rejeter -->
-                                @elseif ($candidat['status'] == 'wait')
-                                    <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        onclick="actionStatus(event, 'accept', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}')"
-                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                    </svg>
-                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Accepter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
-                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 2048 2048">
-                                        <path fill="currentColor"
-                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
-                                    </svg>
-                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Rejeter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-
-                                    <!-- Si le statut est accept, on peut donc soit rejeter soit mettre en attente -->
-                                @elseif ($candidat['status'] == 'accept')
-                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
-                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 2048 2048">
-                                        <path fill="currentColor"
-                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
-                                    </svg>
-                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Rejeter
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
-                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
-                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                    </svg>
-                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
-                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Mettre en attente
-                                        <div class="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
                                 @endif
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
-
             </table>
+
             <button type="button" data-modal-target="popup-accept" id="first-modal"
                 data-modal-toggle="popup-accept" hidden>
                 Launch Modal
