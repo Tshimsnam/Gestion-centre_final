@@ -130,11 +130,12 @@
 
     <div class="flex justify-between items-center">
         <!-- Modal toggle -->
-        <div class="flex justify-end mt-6 mr-4 center">
+        <div class="ml-2">
             <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
                 class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#ff7322] text-white hover:bg-[#ff6822] focus:outline-none focus:bg-[#ff6822] disabled:opacity-50 disabled:pointer-events-none"
-                type="button">Envoyer <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                type="button">Envoyer
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 10 6">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="m1 1 4 4 4-4" />
                 </svg>
@@ -365,7 +366,6 @@
                     class="block  w-full text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     aria-describedby="user_avatar_help" id="file" type="file" accept=".xlsx"
                     name="file">
-
             </div>
             <div class="ml-2">
                 <button type="submit"
