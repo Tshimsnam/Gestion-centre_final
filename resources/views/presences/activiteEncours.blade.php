@@ -151,12 +151,12 @@
                                             </div>
                                             <div class="hidden" id="confirmDiv{{ $item->id }}">
                                                 <form class="space-y-5" action="{{ route('presences.store') }}"
-                                                    method="post" id="confirmForm">
+                                                    method="post" id="confirmForm{{ $item->id }}">
                                                     @csrf
                                                     <div class="flex items-center space-x-5">
                                                         <label for="firstname"
                                                             class="block mb-2 w-36 text-sm font-medium text-gray-900 dark:text-white">Prénom</label>
-                                                        <input type="text" name="firstname" id="firstname"
+                                                        <input type="text" name="firstname" id="firstname{{ $item->id }}"
                                                             class="bg-gray-50 border border-gray-300
                                  text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600
                                  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600
@@ -166,7 +166,7 @@
                                                     <div class="flex items-center mb-4 space-x-5">
                                                         <label for="lastname"
                                                             class="block mb-2 w-36 text-sm font-medium text-gray-900 dark:text-white">Nom</label>
-                                                        <input type="text" name="lastname" id="lastname"
+                                                        <input type="text" name="lastname" id="lastname{{ $item->id }}"
                                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             required="">
                                                     </div>
@@ -174,7 +174,7 @@
                                                         <label for="email"
                                                             class="block mb-2 w-36 text-sm font-medium text-gray-900 dark:text-white">Adresse
                                                             mail</label>
-                                                        <input type="text" name="email" id="confirm-email"
+                                                        <input type="text" name="email" id="confirm-email{{ $item->id }}"
                                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             required="">
                                                     </div>
@@ -182,7 +182,8 @@
                                                     <div class="flex items-center mb-4 space-x-5 eventinputdiv">
                                                         <label for="activite"
                                                             class="block mb-2 w-36 text-sm font-medium text-gray-900 dark:text-white">Activite</label>
-                                                        <input type="text" name="idactivite" id="activite{{$item->id}}"
+                                                        <input type="text" name="idactivite"
+                                                            id="activite{{ $item->id }}"
                                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                             required="" readonly>
                                                     </div>
@@ -194,11 +195,7 @@
                              focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2
                               dark:bg-odcolor dark:hover:bg-odcolor/75 focus:outline-none
                                dark:focus:ring-blue-900">Valider</button>
-
-
-
                                                 </form>
-
                                             </div>
                                         </div>
                                     </div>
@@ -214,7 +211,7 @@
 
     {{-- La section des scripts --}}
     <script>
-        function closeModal(){
+        function closeModal() {
             window.location.reload();
         }
     </script>
@@ -239,7 +236,7 @@
     </script>
 
     <script>
-        $('.validateForm').on("submit",function(e) {
+        $('.validateForm').on("submit", function(e) {
             e.preventDefault();
             var formData = $(this).serialize();
             var activityId = $(this).find('input[name="id"]').val();
@@ -268,9 +265,9 @@
                         $('.filterForms').addClass('hidden');
                         $("#confirmDiv" + activityId).removeClass('hidden');
                         $('.modal-title').text("Confirmation des informations")
-                        $('#firstname').attr('value', data.prenom);
-                        $('#lastname').attr('value', data.nom);
-                        $('#confirm-email').attr('value', data.email);
+                        $('#firstname' + activityId).attr('value', data.prenom);
+                        $('#lastname' + activityId).attr('value', data.nom);
+                        $('#confirm-email' + activityId).attr('value', data.email);
                         $('#activite' + activityId).attr('value', data.activite);
                     }
                 }
