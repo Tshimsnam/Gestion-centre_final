@@ -237,14 +237,7 @@
             });
         </script>
 
-        <script>
-            if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
-                const dataTable = new simpleDatatables.DataTable("#search-table", {
-                    searchable: true,
-                    sortable: true
-                });
-            }
-        </script>
+
 
 
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js"></script>
@@ -434,10 +427,10 @@
                                         ${i+1}
                                     </th>
                                     <td class="px-6 py-4">
-                                        ${data.firstName}
+                                        ${data.first_name}
                                     </td>
                                     <td class="px-6 py-4">
-                                        ${data.lastName}
+                                        ${data.last_name}
                                     </td>
                                     <td class="px-6 py-4">
                                         ${data.gender}
@@ -471,10 +464,10 @@
                                         ${i+1}
                                     </th>
                                     <td class="px-6 py-4">
-                                        ${data.firstName}
+                                        ${data.first_name}
                                     </td>
                                     <td class="px-6 py-4">
-                                        ${data.lastName}
+                                        ${data.last_name}
                                     </td>
                                     <td class="px-6 py-4">
                                         ${data.gender}
