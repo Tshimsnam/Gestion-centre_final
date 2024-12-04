@@ -25,6 +25,7 @@ export default {
     plugins: [
         require("flowbite/plugin")({
             charts: true,
+            datatables: true,
         }),
         // ... other plugins
     ],
