@@ -69,22 +69,21 @@
                             Nom
                         </th>
                         <!-- Email column -->
-                        @if (!in_array('Email', $labels) ||
-                                in_array('E-mail', $labels) ||
-                                in_array('E-mail(obligatoire)', $labels) ||
-                                in_array('Adresse Email', $labels))
+                        @if (
+                            !in_array('Email', $labels) &&
+                                !in_array('E-mail', $labels) &&
+                                !in_array('E-mail(obligatoire)', $labels) &&
+                                !in_array('Adresse Email', $labels))
                             <th scope="col"
                                 class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                 Email
                             </th>
                         @endif
                         <!-- Genre column -->
-                        @if (in_array('Civilié', $labels) || in_array('Civilité', $labels))
-                            <th scope="col"
-                                class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                Genre
-                            </th>
-                        @endif
+                        <th scope="col"
+                            class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            Genre
+                        </th>
                         <!-- Dynamic labels -->
                         @foreach (array_unique($labels) as $label)
                             @if (isset($label))
@@ -96,7 +95,11 @@
                                         'E-mail(obligatoire)',
                                         'Adresse Email',
                                         'Téléphone',
+                                        'Téléphone de l\'encadreur ',
                                         'Numéro de téléphone',
+                                        'Numéro téléphone',
+                                        'Téléphone (obligatoire)',
+                                        'Numéro de téléphone Whastapp (+243 800 000 000.)',
                                         'Numéro de l\'encadreur',
                                         'Tranche d\'âge',
                                         'Adresse',
@@ -149,16 +152,15 @@
                             <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3">
                                 {{ $candidat['odcuser']['last_name'] }}</td>
                             <!-- Email Column -->
-                            @if (!in_array('Email', $labels) ||
-                                    in_array('E-mail', $labels) ||
-                                    in_array('E-mail(obligatoire)', $labels) ||
-                                    in_array('Adresse Email', $labels))
+                            @if (
+                                !in_array('Email', $labels) &&
+                                    !in_array('E-mail', $labels) &&
+                                    !in_array('E-mail(obligatoire)', $labels) &&
+                                    !in_array('Adresse Email', $labels))
                                 <td>{{ $candidat['odcuser']['email'] }}</td>
                             @endif
                             <!-- Genre Column -->
-                            @if (in_array('Civilié', $labels) || in_array('Civilité', $labels))
-                                <td>{{ $candidat['odcuser']['gender'] }}</td>
-                            @endif
+                            <td>{{ $candidat['odcuser']['gender'] }}</td>
                             @foreach (array_unique($labels) as $label)
                                 @if (isset($label))
                                     @if (in_array($label, [
@@ -169,7 +171,11 @@
                                             'E-mail(obligatoire)',
                                             'Adresse Email',
                                             'Téléphone',
+                                            'Téléphone de l\'encadreur ',
                                             'Numéro de téléphone',
+                                            'Numéro téléphone',
+                                            'Téléphone (obligatoire)',
+                                            'Numéro de téléphone Whastapp (+243 800 000 000.)',
                                             'Numéro de l\'encadreur',
                                             'Tranche d\'âge',
                                             'Adresse',
@@ -184,10 +190,22 @@
                                             'Université',
                                             'Université/Etablissement ou Structure',
                                         ]))
-                                        <td class="px-6 py-3">{{ $candidat[$label] ?? 'N/A' }}</td>
-                                    @elseif ($label !== 'Cv de votre parcours (Obligatoire)')
+                                        <td class="px-6 py-3">
+                                            @if (!isset($candidat[$label]) && in_array($label, ['Email', 'E-mail', 'E-mail(obligatoire)', 'Adresse Email']))
+                                                {{ $candidat['odcuser']['email'] }}
+                                            @else
+                                                {{ $candidat[$label] ?? 'N/A' }}
+                                            @endif
+                                        </td>
+                                    @elseif($label !== 'Cv de votre parcours (Obligatoire)')
                                         <td onclick="showDetail(event,  '{{ $candidat['id'] }}')"
-                                            class="label px-6 py-3">{{ $candidat[$label] ?? 'N/A' }}</td>
+                                            class="label px-6 py-3">
+                                            @if (!isset($candidat[$label]) && in_array($label, ['Email', 'E-mail', 'E-mail(obligatoire)', 'Adresse Email']))
+                                                {{ $candidat['odcuser']['email'] }}
+                                            @else
+                                                {{ $candidat[$label] ?? 'N/A' }}
+                                            @endif
+                                        </td>
                                     @endif
                                 @endif
                             @endforeach
@@ -195,10 +213,10 @@
                             <td onclick="showDetail(event,  '{{ $candidat['id'] }}')" class="px-6 py-3"
                                 id="statusCell">{{ $candidat['status'] }}</td>
                             <td class="px-6 py-3 flex space-x-3">
-                                <!-- Actions and status condition handling -->
+                                <!-- Si le statut est decline, on peut donc soit accepter soit mettre en attente -->
                                 @if ($candidat['status'] == 'decline')
                                     <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
-                                        class="text-white hover:text-[#FF7322] cursor-pointer"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
                                         onclick="actionStatus(event, 'accept', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}')"
                                         class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -206,6 +224,131 @@
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                             stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
                                     </svg>
+                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Accepter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Mettre en attente
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                    {{-- Si le statut est new, on affiche tout --}}
+                                @elseif ($candidat['status'] == 'new')
+                                    <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        onclick="actionStatus(event, 'accept', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}')"
+                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
+                                    </svg>
+                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Accepter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Mettre en attente
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
+                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 2048 2048">
+                                        <path fill="currentColor"
+                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
+                                    </svg>
+                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Rejeter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <!-- Si le statut est wait, on peut donc soit accepter soit rejeter -->
+                                @elseif ($candidat['status'] == 'wait')
+                                    <svg data-tooltip-target="tooltip-accept{{ $candidat['id'] }}"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        onclick="actionStatus(event, 'accept', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}')"
+                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
+                                    </svg>
+                                    <div id="tooltip-accept{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Accepter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
+                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 2048 2048">
+                                        <path fill="currentColor"
+                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
+                                    </svg>
+                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Rejeter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+
+                                    <!-- Si le statut est accept, on peut donc soit rejeter soit mettre en attente -->
+                                @elseif ($candidat['status'] == 'accept')
+                                    <svg data-tooltip-target="tooltip-reject{{ $candidat['id'] }}"
+                                        onclick="actionStatus(event, 'decline', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 2048 2048">
+                                        <path fill="currentColor"
+                                            d="m1115 1024l690 691l-90 90l-691-690l-691 690l-90-90l690-691l-690-691l90-90l691 690l691-690l90 90z" />
+                                    </svg>
+                                    <div id="tooltip-reject{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Rejeter
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
+                                    <svg data-tooltip-target="tooltip-await{{ $candidat['id'] }}"
+                                        class="text-gray-800 dark:text-white hover:text-[#FF7322] cursor-pointer"
+                                        onclick="actionStatus(event, 'wait', '{{ $candidat['id'] }}', '{{ $candidat['odcuser']['first_name'] }}', '{{ $candidat['odcuser']['last_name'] }}')"
+                                        class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                    </svg>
+                                    <div id="tooltip-await{{ $candidat['id'] }}" role="tooltip"
+                                        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                        Mettre en attente
+                                        <div class="tooltip-arrow" data-popper-arrow></div>
+                                    </div>
                                 @endif
                             </td>
                         </tr>
