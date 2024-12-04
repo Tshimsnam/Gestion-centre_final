@@ -186,8 +186,8 @@ class ActiviteController extends Controller
 
             $criteres = Critere::where('activite_id', $activite->id)->get();
             $candidats = Candidat::where('activite_id', $activite->id)->get();
-            $participants = Candidat::where('activite_id', $activite->id)->where('status', 'accepted')->get();
-            $total_p = Candidat::where('activite_id', $activite->id)->where('status', 'Accepted')->get()->count();
+            $participants = Candidat::where('activite_id', $activite->id)->where('status', 'accept')->get();
+            $total_p = Candidat::where('activite_id', $activite->id)->where('status', 'Accept')->get()->count();
             $total_ih = Candidat::where('activite_id', $activite->id)
                 ->whereHas('odcuser', function ($query) {
                     $query->where('gender', 'like', 'male');

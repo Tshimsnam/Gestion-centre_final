@@ -18,12 +18,12 @@
         <div class="weather">
             <div class="flex flex-row">
                 <div class="basis-2/4 p-5">
-                    @if ($event->thumbnailURL)
-                        <img class="" src="{{ $event->thumbnailURL }}" alt="event">
-                    @else
+                    @if (empty($event->thumbnail_url))
                         <img class=""
                             src="{{ asset('https://activites-etudiantes.hec.ca/wp-content/uploads/2024/07/Placeholder_evenement_externe_2024_CALENDRIER.jpg') }}"
                             alt="image">
+                    @else
+                        <img class="" src="{{ $event->thumbnail_url }}" alt="event">
                     @endif
 
                     <h2 style="font-size:30px;margin-top:30px;text-decoration:underline;"></h2>
@@ -417,19 +417,19 @@
 </div>
 
 @section('modal')
-    <div id="parcours-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
+    <div id="parcours-modal" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-7xl max-h-full">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Create New Product
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        Extra Large modal
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="parcours-modal">
+                        data-modal-hide="parcours-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -439,45 +439,220 @@
                     </button>
                 </div>
                 <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4 overflow-y-auto ">
+                    <table id="search-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        N°
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        nom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        prenom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        genre
+                                    </span>
+                                </th>
 
-                <table id="search-table">
-                    <thead>
-                        <tr>
-                            <th>
-                                <span class="flex items-center">
-                                    N°
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    nom
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                 prenom
-                                </span>
-                            </th>
-                            <th>
-                                <span class="flex items-center">
-                                    genre
-                                </span>
-                            </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        Parcours
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                            <th>
-                                <span class="flex items-center">
-                                    Parcours
-                                </span>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                    </tbody>
-                </table>
-
-
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modal footer -->
+                <div
+                    class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="parcours-modal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
+                        accept</button>
+                    <button data-modal-hide="parcours-modal" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <div id="news-modal" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-7xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        Extra Large modal
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="news-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4 overflow-y-auto ">
+                    <table id="news-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        N°
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        nom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        prenom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        genre
+                                    </span>
+                                </th>
+
+                                <th>
+                                    <span class="flex items-center">
+                                        Parcours
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modal footer -->
+                <div
+                    class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="news-modal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
+                        accept</button>
+                    <button data-modal-hide="news-modal" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cinq-modal" tabindex="-1"
+        class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-7xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        Extra Large modal
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="cinq-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4 overflow-y-auto ">
+                    <table id="cinq-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        N°
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        nom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        prenom
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        genre
+                                    </span>
+                                </th>
+
+                                <th>
+                                    <span class="flex items-center">
+                                        Parcours
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Modal footer -->
+                <div
+                    class="flex items-center p-4 md:p-5 space-x-3 rtl:space-x-reverse border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button data-modal-hide="cinq-modal" type="button"
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
+                        accept</button>
+                    <button data-modal-hide="cinq-modal" type="button"
+                        class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+            const dataTable = new simpleDatatables.DataTable("#search-table", {
+                searchable: true,
+                sortable: true
+            });
+        }
+
+        if (document.getElementById("news-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+            const dataTable = new simpleDatatables.DataTable("#news-table", {
+                searchable: true,
+                sortable: true
+            });
+        }
+
+        if (document.getElementById("cinq-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+            const dataTable = new simpleDatatables.DataTable("#cinq-table", {
+                searchable: true,
+                sortable: true
+            });
+        }
+    </script>
 @endsection

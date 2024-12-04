@@ -18,11 +18,11 @@ export default defineConfig({
     ],
 
     // server:{
-    //     host: '10.252.252.10',
+    //     host: '0.0.0.0',
     //     cors:{
     //         origin:'*',
     //         credentials: true,
-    //     }
+    //     },
     // }
 
 
