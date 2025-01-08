@@ -174,10 +174,10 @@
                                     '<p class=" text-red-500">Aucun résultat trouvé.</p>');
                             } else {
                                 var htmlContent = '';
-
+                                let host = window.location.origin;
                                 response.forEach(function(odcuser) {
                                     htmlContent += `
-                                                    <a href="http://127.0.0.1:8000/odcusers/${odcuser.id}"
+                                                    <a href="${host}/odcusers/${odcuser.id}"
                                                         class="inline-flex items-center justify-center p-5 text-base font-medium text-gray-500 rounded-lg bg-gray-50 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700 dark:hover:text-white">
 
                                                         <span class="w-full">${odcuser.first_name} ${odcuser.last_name}</span>
