@@ -35,7 +35,7 @@ class ActiviteController extends Controller
         $activites = Activite::with('categorie')->latest()->paginate(12);
 
         if ($request->ajax()) {
-            return view('activites.index', compact('activites'))->fragment('content');
+            return view('activites.index', compact('activites'))->render();
         }
 
         return view('activites.index', compact('activites'));
