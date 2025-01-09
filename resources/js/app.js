@@ -7,11 +7,15 @@ import './components/kendo.all.min'
 import './components/kendo.actionsheet'
 import Swal from 'sweetalert2';
 import 'animate.css';
+import $ from 'jquery';
+
 
 window.Swal = Swal;
 
 
 window.Alpine = Alpine;
+
+window.$ = $;
 
 Alpine.start();
 
