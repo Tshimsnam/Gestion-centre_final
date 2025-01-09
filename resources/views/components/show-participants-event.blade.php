@@ -356,29 +356,35 @@
             </div>
         @endsection
 
-        <form action="{{ route('importAndgenerate') }}" method="POST" enctype="multipart/form-data"
-            class="flex">
+        <form action="{{ route('importAndgenerate') }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2">
             @csrf
-            {{-- <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white text-center">Importer et Generer les certificats</p> --}}
             <input type="hidden" name="activite" value="{{ $activite->id }}">
-            <div class="ml-2">
-                <input
-                    class="block  w-full text-sm  text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                    aria-describedby="user_avatar_help" id="file" type="file" accept=".xlsx"
-                    name="file">
+
+            {{-- File input container --}}
+            <div class="flex-grow">
+                <input required
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".xlsx"
+                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50
+                           dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                           focus:outline-none"
+                    aria-describedby="file_input_help"
+                >
             </div>
-            <div class="ml-2">
-                <button type="submit"
-                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:bg-[#FF6822] disabled:opacity-50 disabled:pointer-events-none">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#e8eaed">
-                        <path d=" M480-320 280-520l56-58 104 104v-326h80v326l104-104 56
-                    58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5
-                    56.5T720-160H240Z" />
-                    </svg>
-                    Importer
-                </button>
-            </div>
+
+            {{-- Submit button --}}
+            <button type="submit"
+                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white
+                       rounded-lg border border-transparent bg-[#FF7322] hover:bg-[#FF6822]
+                       focus:outline-none focus:bg-[#FF6822]
+                       disabled:opacity-50 disabled:pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 -960 960 960" fill="#e8eaed">
+                    <path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
+                </svg>
+                Importer
+            </button>
         </form>
 
         <div class="ml-2">

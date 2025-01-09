@@ -397,7 +397,7 @@ class CourseraController extends Controller
         $taux_util_kan_count = $taux_util_kan->count();
 
 
-        $taux_kin = ($taux_util_kin_count * 100) / $taux_utilisation->count();
+        $taux_kin = $taux_utilisation->count() > 0 ? ($taux_util_kin_count * 100) / $taux_utilisation->count() : 0;
 
         $membersKinshasa = CourseraMember::where('external_id', 'REGEXP', '^[10]\d*')
             ->get();

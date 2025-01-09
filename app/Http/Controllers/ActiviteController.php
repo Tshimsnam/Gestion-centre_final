@@ -30,38 +30,15 @@ class ActiviteController extends Controller
     private $id_event;
     private $candidat;
 
-    public function index()
+    public function index(Request $request)
     {
+        $activites = Activite::with('categorie')->latest()->paginate(12);
 
-        $activites = Activite::latest()->paginate(100);
-        $typeEvent = TypeEvent::all();
-        $categories = Categorie::all();
-        $hashtag = Hashtag::all();
-
-
-        try {
-
-            foreach ($activites as $activite) {
-                $message = Carbon::today();
-                $startDate = Carbon::parse($activite->start_date);
-                $endDate = Carbon::parse($activite->end_date);
-                if ($message >= $startDate && $message <= $endDate) {
-
-                    $activite->message = 'En cours';
-                } elseif ($message < $startDate) {
-
-
-                    $differenceInDays = $startDate->diffInDays($message);
-                    $activite->message = "Jour j$differenceInDays ";
-                } else {
-                    $activite->message = 'Terminée';
-                }
-            }
-
-            return view('activites.index', compact('activites', 'typeEvent', 'categories', 'hashtag',));
-        } catch (\Exception $th) {
-            return back()->withErrors(['error' => "An error occurred while creating the activity. $th"])->withInput();
+        if ($request->ajax()) {
+            return view('activites.index', compact('activites'))->render();
         }
+
+        return view('activites.index', compact('activites'));
     }
 
     public function create()
@@ -676,7 +653,7 @@ class ActiviteController extends Controller
     public function search(Request $request)
     {
         $searchTerm = $request->input('search');
-        $activites = Activite::where('title', 'LIKE', "%{$searchTerm}%")
+        $activites = Activite::where('title', 'LIKE', "%{$searchTerm}%")->with('categorie')
             ->take(4)
             ->latest()
             ->get();

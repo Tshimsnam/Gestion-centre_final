@@ -19,7 +19,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 <div class="basis-2/4">
                     @if (empty($event->thumbnail_url))
-                        <img class="" src="{{ asset('images/placeholder-event.jpg') }}"
+                        <img class="" src="{{ asset('img/placeholder-event.webp') }}"
                             alt="Event placeholder image">
                     @else
                         <img class="" src="{{ $event->thumbnail_url }}" alt="{{ $event->title }}">
@@ -634,25 +634,42 @@ if ($startDate <= $now && $endDate >= $now) {
 
 
 <script>
-    const initializeDataTable = (tableId) => {
-        if (document.getElementById(tableId) && typeof simpleDatatables !== 'undefined') {
-            return new simpleDatatables.DataTable(`#${tableId}`, {
-                searchable: true,
-                sortable: true,
-                fixedHeight: true,
-                labels: {
-                    placeholder: "Rechercher...",
-                    perPage: "Entrées par page",
-                    noRows: "Aucune donnée trouvée",
-                    info: "Affichage de {start} à {end} sur {rows} entrées",
-                },
-            });
-        }
-        return null;
-    };
-
-    // Initialize all tables
-    ['search-table', 'news-table', 'cinq-table'].forEach(tableId => {
-        initializeDataTable(tableId);
+// Animation des lignes du tableau
+document.querySelectorAll('#usersTable tbody tr').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+        row.classList.add('bg-gray-50', 'dark:bg-gray-700', 'transition-colors', 'duration-150');
     });
+    row.addEventListener('mouseleave', () => {
+        row.classList.remove('bg-gray-50', 'dark:bg-gray-700');
+    });
+});
+
+// Recherche en temps réel
+const searchInput = document.getElementById('search');
+const resultsContainer = document.getElementById('resultsContainer');
+
+searchInput.addEventListener('input', debounce(async (e) => {
+    const searchTerm = e.target.value;
+    if (searchTerm.length < 2) return;
+
+    try {
+        // Simuler une recherche (à remplacer par votre logique)
+        const results = await searchUsers(searchTerm);
+        displayResults(results);
+    } catch (error) {
+        console.error('Erreur de recherche:', error);
+    }
+}, 300));
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 </script>
