@@ -654,7 +654,7 @@ class ActiviteController extends Controller
     {
         $searchTerm = $request->input('search');
         $activites = Activite::where('title', 'LIKE', "%{$searchTerm}%")->with('categorie')
-            ->take(4)
+            ->take(20)
             ->latest()
             ->get();
 

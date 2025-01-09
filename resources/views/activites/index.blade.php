@@ -6,6 +6,29 @@
             border-radius: 6px;
             color: #e38407;
         }
+
+        /* Personnalisation de la barre de défilement */
+        #search-activities .relative[style*="overflow-y: auto;"] {
+            scrollbar-width: thin; /* Pour Firefox */
+            scrollbar-color: #e38407 #f0f0f0; /* Couleur de la barre de défilement et de l'arrière-plan */
+        }
+
+        #search-activities .relative[style*="overflow-y: auto;"]::-webkit-scrollbar {
+            width: 8px; /* Largeur de la barre de défilement */
+        }
+
+        #search-activities .relative[style*="overflow-y: auto;"]::-webkit-scrollbar-track {
+            background: #f0f0f0; /* Couleur de l'arrière-plan de la barre de défilement */
+        }
+
+        #search-activities .relative[style*="overflow-y: auto;"]::-webkit-scrollbar-thumb {
+            background-color: #e38407; /* Couleur de la barre de défilement */
+            border-radius: 10px; /* Arrondir les bords de la barre de défilement */
+        }
+
+        #search-activities .relative[style*="overflow-y: auto;"]::-webkit-scrollbar-thumb:hover {
+            background-color: #d57c06; /* Couleur de la barre de défilement au survol */
+        }
     </style>
 
     @if ($errors->any())
@@ -457,28 +480,31 @@
     @section('modal')
         <!-- Main modal -->
         <div id="search-activities" data-modal-backdrop="static" tabindex="-1" aria-hidden="true"
-            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            class="hidden overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full transition-opacity duration-300 ease-in-out">
             <div class="relative p-4 w-full max-w-2xl max-h-full">
                 <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700" style="max-height: 80vh; overflow: hidden;">
                     <!-- Modal header -->
-                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                        <input type="search" id="search"
-                            class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 dark:placeholder-gray-400 dark:text-white "
-                            placeholder="Rechercher des Activites ..." required />
-                        <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="search-activities">
-                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                viewBox="0 0 14 14">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
+                    <div class="sticky top-0 bg-white dark:bg-gray-700 z-10 border-b dark:border-gray-600">
+                        <div class="flex items-center justify-between p-4 md:p-5">
+                            <input type="search" id="search"
+                                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-900 dark:placeholder-gray-400"
+                                placeholder="Rechercher des Activites ..." required aria-label="Rechercher des Activités" />
+                            <button type="button"
+                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-hide="search-activities" aria-label="Fermer le modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
                     </div>
                     <!-- Modal body -->
-                    <div class="p-4 md:p-5 space-y-4 relative overflow-x-auto block" id="resultsContainer">
+                    <div class="p-4 md:p-5 space-y-4 relative overflow-y-auto" id="resultsContainer" style="max-height: calc(80vh - 100px);">
+                        <p class="text-gray-500">Chargement des résultats...</p> <!-- Indication de chargement -->
                     </div>
                 </div>
             </div>

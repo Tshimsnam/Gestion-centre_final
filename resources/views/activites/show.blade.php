@@ -537,8 +537,7 @@
                     selectAllCheckbox.addEventListener('change', function() {
                         rowCheckboxes.forEach(checkbox => {
                             checkbox.checked = selectAllCheckbox.checked;
-                            const id = checkbox.dataset
-                                .id; // Supposant que chaque checkbox a un data-id
+                            const id = checkbox.dataset.id; // Supposant que chaque checkbox a un data-id
                             if (selectAllCheckbox.checked) {
                                 selectedCandidats.add(id); // Ajouter à l'ensemble si sélectionné
                             } else {
@@ -609,6 +608,12 @@
                                         selectedCandidats.clear(); // Réinitialiser le Set
                                         updateSelectionDisplay
                                             (); // Mettre à jour l'affichage
+
+                                        // Désélectionner tous les checkboxes après l'action
+                                        rowCheckboxes.forEach(checkbox => {
+                                            checkbox.checked = false; // Désélectionner chaque checkbox
+                                        });
+                                        selectAllCheckbox.checked = false; // Désélectionner le selectAllCheckbox
                                     },
                                     error: function(xhr) {
                                         const errorMessage = xhr.responseJSON?.error ||

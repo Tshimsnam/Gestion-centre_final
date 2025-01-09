@@ -43,7 +43,7 @@
                 </svg>
             </a>
         </div>
-       
+
     </div>
 
     <div class="py-6 relative overflow-x-auto">
@@ -54,8 +54,8 @@
                     <tr>
                         <th scope="col" class="p-4">
                             <div class="flex items-center">
-                                <input id="select-all" type="checkbox"
-                                    class="w-4 h-4 text-[#FF7322] hover:cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                {{-- <input id="select-all" type="checkbox"
+                                    class="w-4 h-4 text-[#FF7322] hover:cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"> --}}
                                 <label for="select-all" class="sr-only">checkbox</label>
                             </div>
                         </th>
