@@ -207,7 +207,7 @@
                         @forelse ($activites as $key => $activite)
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {{ $activite->id }}
+                                    {{ $activite->_id }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
@@ -225,7 +225,7 @@
                                                 {{ $activite->title }}
                                             </div>
                                             <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                {{ Str::limit($activite->message, 50) }}
+                                                {{ Str::limit($activite->content, 50) }}
                                             </div>
                                         </div>
                                     </div>
@@ -534,7 +534,7 @@
                                 var htmlContent = '';
 
                                 let host = window.location.origin;
-                                
+
 
                                 response.forEach(function(activite) {
                                     htmlContent += `
@@ -612,25 +612,38 @@
                 const inputField = document.getElementById('search').focus()
             }
 
+
+
             document.addEventListener("DOMContentLoaded", () => {
                 const gridViewBtn = document.getElementById("gridViewBtn");
                 const listViewBtn = document.getElementById("listViewBtn");
                 const gridView = document.getElementById("gridView");
                 const listView = document.getElementById("listView");
 
-                gridViewBtn.addEventListener("click", () => {
-                    gridView.classList.remove("hidden");
-                    listView.classList.add("hidden");
-                    gridViewBtn.classList.add("active");
-                    listViewBtn.classList.remove("active");
-                });
+                // Fonction pour changer la vue
+                function switchView(view) {
+                    if (view === 'grid') {
+                        gridView.classList.remove("hidden");
+                        listView.classList.add("hidden");
+                        gridViewBtn.classList.add("active");
+                        listViewBtn.classList.remove("active");
+                        localStorage.setItem('selectedView', 'grid');
+                    } else {
+                        listView.classList.remove("hidden");
+                        gridView.classList.add("hidden");
+                        listViewBtn.classList.add("active");
+                        gridViewBtn.classList.remove("active");
+                        localStorage.setItem('selectedView', 'list');
+                    }
+                }
 
-                listViewBtn.addEventListener("click", () => {
-                    listView.classList.remove("hidden");
-                    gridView.classList.add("hidden");
-                    listViewBtn.classList.add("active");
-                    gridViewBtn.classList.remove("active");
-                });
+                // Restaurer la vue précédemment sélectionnée
+                const savedView = localStorage.getItem('selectedView') || 'grid';
+                switchView(savedView);
+
+                // Gestionnaires d'événements pour les boutons
+                gridViewBtn.addEventListener("click", () => switchView('grid'));
+                listViewBtn.addEventListener("click", () => switchView('list'));
             });
         </script>
 

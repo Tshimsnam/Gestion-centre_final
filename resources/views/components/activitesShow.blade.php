@@ -12,7 +12,7 @@
     'criteres',
 ])
 
-<div class="hidden p-4 rounded-lg bg-[#eaeaebf3] dark:bg-gray-800" id="styled-details" role="tabpanel"
+<div class=" p-4 rounded-lg bg-[#eaeaebf3] dark:bg-gray-800" id="styled-details" role="tabpanel"
     aria-labelledby="details-tab">
     <div class="k-state-active k-content" style="opacity: 1; display: block;">
         <div class="weather">

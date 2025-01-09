@@ -33,6 +33,15 @@
         #candidatTable tbody tr:hover {
             background-color: #f1f1f1;
         }
+
+        /* Styles pour les états des onglets */
+        [role="tab"].active {
+            @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-white;
+        }
+
+        [role="tab"]:not(.active) {
+            @apply text-gray-600 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-700/80;
+        }
     </style>
 
     <!-- Header section -->
@@ -126,120 +135,103 @@
     @endif
 
     <!-- Tab navigation -->
-    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab"
-            data-tabs-toggle="#default-styled-tab-content"
-            data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
-            data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
-            role="tablist">
-            <li class="me-2" role="presentation">
-                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="details-styled-tab"
-                    data-tabs-target="#styled-details" type="button" role="tab" aria-controls="details"
-                    aria-selected="false">Detail</button>
-            </li>
-            <li class="me-2" role="presentation">
-                <button
-                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                    id="candidats-styled-tab" data-tabs-target="#styled-candidats" type="button" role="tab"
-                    aria-controls="candidats" aria-selected="false">Candidats</button>
-            </li>
-            <li class="me-2" role="presentation">
-                <button
-                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                    id="participants-styled-tab" data-tabs-target="#styled-participants" type="button"
-                    role="tab" aria-controls="participants" aria-selected="false">Participants</button>
-            </li>
-            <li class="me-2" role="presentation">
-                <button
-                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                    id="presences-styled-tab" data-tabs-target="#styled-presences" type="button" role="tab"
-                    aria-controls="presences" aria-selected="false">Presence</button>
-            </li>
-            <li class="me-2" role="presentation">
-                <button
-                    class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                    id="import-styled-tab" data-tabs-target="#styled-import" type="button" role="tab"
-                    aria-controls="import" aria-selected="false">Import</button>
-            </li>
-        </ul>
+    <div class="inline-flex rounded-lg shadow-sm bg-gray-100 dark:bg-gray-700 p-1 my-5">
+        <button id="details-btn"
+            class="tab-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            data-view="details">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Details
+        </button>
+
+        <button id="candidats-btn"
+            class="tab-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            data-view="candidats">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            Candidats
+        </button>
+
+        <button id="participants-btn"
+            class="tab-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            data-view="participants">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            Participants
+        </button>
+
+        <button id="presences-btn"
+            class="tab-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            data-view="presences">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            Présences
+        </button>
+
+        <button id="import-btn"
+            class="tab-btn inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200"
+            data-view="import">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Import
+        </button>
+    </div>
+
+
+    <div class="flex space-x-2">
+        <a href="#" id="acceptAllBtn" data-status="accept"
+            class="hidden py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:ring-2 focus:ring-[#FF6822] transition duration-200">Accepter</a>
+        <a href="#" id="rejectAllBtn" data-status="decline"
+            class="hidden py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:ring-2 focus:ring-[#FF6822] transition duration-200">Rejeter</a>
+        <a href="#" id="awaitAllBtn" data-status="wait"
+            class="hidden py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:ring-2 focus:ring-[#FF6822] transition duration-200">Mettre
+            en attente</a>
     </div>
 
     <!-- Tab content -->
-    <div id="default-styled-tab-content">
-        <!-- Show activity details -->
+    <div id="details-view" class="tab-view p-4 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+
         <x-activitesShow :nbj="$nbj" :event="$activite" :candidats="$candidats" :total_ih="$total_ih" :total_if="$total_if"
             :total_ph="$total_ph" :total_pf="$total_pf" :total_p="$total_p" />
 
-        <!-- Show candidates for the activity -->
+    </div>
+
+    <div id="candidats-view" class="tab-view hidden p-4 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
         <x-show-candidates-event :activite="$activite" :labels="$labels" :candidatsData="$candidatsData" :odcusers="$odcusers"
             :id="$id" />
-
-        <!-- Participants tab content -->
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-participants" role="tabpanel"
-            aria-labelledby="participants-tab">
-            <x-show-participants-event :participantsData="$participantsData" :activite="$activite" :labels="$labels" :candidatsData="$candidatsData"
-                :odcusers="$odcusers" :id="$id" :modelMail="$modelMail" />
-        </div>
-
-        <!-- Presence tab content -->
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-presences" role="tabpanel"
-            aria-labelledby="settings-tab">
-            <x-activite-presence-component :fullDates="$fullDates" :dates="$dates" :presencesData="$presencesData" />
-        </div>
-
-        <!-- import tab content -->
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="styled-import" role="tabpanel"
-            aria-labelledby="contacts-tab">
-            <p class="text-sm text-gray-500 dark:text-gray-400"><x-activite-import :activite="$activite" /></p>
-        </div>
     </div>
+
+    <div id="participants-view" class="tab-view hidden p-4 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+        <x-show-participants-event :participantsData="$participantsData" :activite="$activite" :labels="$labels" :candidatsData="$candidatsData"
+            :odcusers="$odcusers" :id="$id" :modelMail="$modelMail" />
+    </div>
+
+    <div id="presences-view" class="tab-view hidden p-4 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+        <x-activite-presence-component :fullDates="$fullDates" :dates="$dates" :presencesData="$presencesData" />
+    </div>
+
+    <div id="import-view" class="tab-view hidden p-4 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+        <x-activite-import :activite="$activite" />
+    </div>
+
+
+
 
     @php
         $url = env('API_URL');
     @endphp
 
     @section('script')
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                // Récupérer l'ID de l'onglet actif depuis localStorage
-                const activeTabId = localStorage.getItem("activeTab");
-
-                // Si un ID est trouvé, activer l'onglet correspondant
-                if (activeTabId) {
-                    const activeTabButton = document.querySelector(`#${activeTabId}`);
-                    const activeTabContentId = activeTabButton?.getAttribute("data-tabs-target");
-
-                    if (activeTabButton && activeTabContentId) {
-                        // Activer le bouton
-                        document.querySelectorAll("[role='tab']").forEach(tab => {
-                            tab.classList.remove("text-purple-600", "border-purple-600");
-                            tab.classList.add("hover:text-gray-600", "hover:border-gray-300");
-                        });
-                        activeTabButton.classList.add("text-purple-600", "border-purple-600");
-
-                        // Activer le contenu
-                        document.querySelectorAll("[role='tabpanel']").forEach(panel => {
-                            panel.classList.add("hidden");
-                        });
-                        document.querySelector(activeTabContentId)?.classList.remove("hidden");
-                    }
-                }
-
-                // Ajouter un écouteur d'événement pour sauvegarder l'onglet actif
-                const tabs = document.querySelectorAll("[role='tab']");
-                tabs.forEach(tab => {
-                    tab.addEventListener("click", () => {
-                        const targetId = tab.id;
-                        localStorage.setItem("activeTab",
-                            targetId); // Enregistrer l'ID de l'onglet actif
-                    });
-                });
-            });
-        </script>
-
-
-
-
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/dataTables.fixedColumns.js"></script>
         <script src="https://cdn.datatables.net/fixedcolumns/5.0.4/js/fixedColumns.dataTables.js"></script>
         <script>
@@ -654,8 +646,6 @@
                 }
             });
         </script>
-
-
         {{-- Script for presence data table --}}
         <script>
             $(document).ready(function() {
@@ -898,27 +888,23 @@
 
                 switch (type) {
                     case 'accept':
-                        $('#accept-link').attr('data', id)
-                        $('#popup-title-accept').text(
-                            "Confirmez-vous la validation de la candidature de " + firstname + " ?")
-                        document.getElementById('first-modal').click()
+                        $('#accept-link').attr('data', id);
+                        $('#popup-title-accept').text("Confirmez-vous la validation de la candidature de " + firstname + " ?");
+                        $('#popup-accept').removeClass('hidden'); // Show the modal
                         break;
                     case 'decline':
-                        $('#decline-link').attr('data', id)
-                        $('#popup-title-decline').text(
-                            "Confirmez-vous l'annulation de la candidature de " + firstname + " ?");
-                        document.getElementById('second-modal').click()
+                        $('#decline-link').attr('data', id);
+                        $('#popup-title-decline').text("Confirmez-vous l'annulation de la candidature de " + firstname + " ?");
+                        $('#popup-decline').removeClass('hidden'); // Show the modal
                         break;
                     case 'wait':
-                        $('#wait-link').attr('data', id)
-                        $('#popup-title-wait').text(
-                            "Confirmez-vous la mise en attente de " + firstname + " ?")
-                        document.getElementById('third-modal').click()
+                        $('#wait-link').attr('data', id);
+                        $('#popup-title-wait').text("Confirmez-vous la mise en attente de " + firstname + " ?");
+                        $('#popup-wait').removeClass('hidden'); // Show the modal
+                        break;
                     default:
                         break;
                 }
-
-
             }
 
             function changeStatus(event, status) {
@@ -1271,5 +1257,70 @@
                 });
             });
         </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const tabBtns = document.querySelectorAll('.tab-btn');
+                const tabViews = document.querySelectorAll('.tab-view');
+
+                function switchView(view) {
+                    console.log('Switching to view:', view);
+
+                    // Masquer toutes les vues sauf details au début
+                    tabViews.forEach(v => {
+                        if (v.id !== 'details-view' || view !== 'details') {
+                            v.classList.add('hidden');
+                        }
+                    });
+
+                    // Désactiver tous les boutons
+                    tabBtns.forEach(b => b.classList.remove('active'));
+
+                    // Afficher la vue sélectionnée et activer le bouton correspondant
+                    const selectedView = document.getElementById(`${view}-view`);
+                    const selectedBtn = document.querySelector(`[data-view="${view}"]`);
+
+                    if (selectedView && selectedBtn) {
+                        selectedView.classList.remove('hidden');
+                        selectedBtn.classList.add('active');
+                        localStorage.setItem('selectedActivityView', view);
+                    }
+                }
+
+                // Initialisation : s'assurer que details est visible par défaut
+                const detailsView = document.getElementById('details-view');
+                if (detailsView) {
+                    detailsView.classList.remove('hidden');
+                }
+
+                // Restaurer la vue précédemment sélectionnée ou utiliser 'details' par défaut
+                const savedView = localStorage.getItem('selectedActivityView') || 'details';
+                switchView(savedView);
+
+                // Gestionnaires d'événements pour les boutons
+                tabBtns.forEach(btn => {
+                    btn.addEventListener('click', () => switchView(btn.dataset.view));
+                });
+
+                // Activer l'onglet details par défaut si aucun onglet n'est actif
+                if (!document.querySelector('.tab-btn.active')) {
+                    const detailsBtn = document.querySelector('[data-view="details"]');
+                    if (detailsBtn) {
+                        detailsBtn.classList.add('active');
+                    }
+                }
+            });
+        </script>
     @endsection
+
+    <style>
+        .active {
+            background: rgba(255, 255, 255, 0.932);
+            border-radius: 6px;
+            color: #e38407;
+        }
+    </style>
+
+
+
 </x-app-layout>
