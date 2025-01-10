@@ -16,4 +16,5 @@ Route::post('/export', [ImportControl::class, 'exportModel'])->name('export');
 Route::post('/exportParticipant', [ImportControl::class, 'exportParticipant'])->name('exportParticipant');
 Route::post('/importAndgenerate', [ImportControl::class, 'importAndgenerate'])->name('importAndgenerate');
 Route::get('/generateAllCertificat/{id}', [ImportControl::class, 'generateAllCertificats'])->name('allCertificats');
+Route::post('/import-participants', [ImportControl::class, 'importParticipantsFromExcel'])->name('import.participants');
 
