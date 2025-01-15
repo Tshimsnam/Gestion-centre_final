@@ -248,7 +248,7 @@
                                                 {{ $activite->title }}
                                             </div>
                                             <div class="text-sm text-gray-500 dark:text-gray-400">
-                                                {{ Str::limit($activite->content, 50) }}
+                                                {!! Str::limit($activite->content, 50) !!}
                                             </div>
                                         </div>
                                     </div>
@@ -403,10 +403,10 @@
         </div>
 
         <div id="gridView">
-            <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8">
+            <div class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8 ">
                 @forelse ($activites as $activite)
                     <div
-                        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden hover:scale-110 ">
                         <a href="{{ route('activites.show', $activite->id) }}" class="block">
                             <div class="relative">
                                 @if (empty($activite->thumbnail_url))

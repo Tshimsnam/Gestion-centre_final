@@ -6,9 +6,13 @@ use App\Http\Controllers\PresenceController;
 use App\Http\Controllers\Api\PresenceAutocomplete;
 use FontLib\Table\Type\name;
 
+
+
+Route::get('/activite/{activiteId}/candidat/{candidatId}', [QrCodeController::class, 'ScanerQrcode'])->name('scaner.qrcode');
+
 Route::get('codeqr', [QrCodeController::class, 'index'])->name('codeqr')->middleware('permissions');
 Route::get('participant/{id}', [QrCodeController::class, 'participant'])->name('participant');
-Route::post('storeqrcode/{id}', [QrCodeController::class, 'store'])->name('storeqrcode');
+Route::post('confirm-presence/{id}', [QrCodeController::class, 'store'])->name('storeqrcode');
 Route::post('presences/update', [PresenceController::class, 'updatePresences'])->name('presences.update');
 // Route::resource('presences', PresenceController::class)->middleware('permissions');
 Route::get('create/{id}', [PresenceController::class, 'create'])->name('create');

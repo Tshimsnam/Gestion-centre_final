@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ asset('img/orange.webp') }}" type="image/x-icon">
+    <title>{{ $title ?? 'Gestion Centre' }}</title>
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+
+<body
+    class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 flex items-center justify-center min-h-screen">
+    <div class="container mx-auto max-w-4xl p-6">
+        <div>
+            <a href="{{ route('dashboard') }}" class="flex items-center justify-center w-mx-auto">
+                <x-application-logo class="text-gray-500 fill-current w-50 h-50" />
+            </a>
+        </div>
+        <div class="text-center">
+            <h1 class="text-2xl font-extrabold mb-2 text-black dark:text-white">Scanner QR Code</h1>
+            <p class="text-sm text-gray-500 dark:text-gray-400">Démarrez la caméra pour scanner un QR Code.</p>
+        </div>
+
+        <!-- QR Code Scanner -->
+        <div id="result" class="text-center text-lg font-semibold text-green-500 my-4" role="alert"></div>
+        <div class="bg-white dark:bg-[#1E293B] shadow-lg rounded-lg p-4 flex flex-col items-center">
+            <div id="qr_reader" class="w-full h-[400px]" aria-label="QR Code Scanner"></div>
+            <div class="mt-4 space-x-4">
+                <button id="startScan"
+                    class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition transform hover:scale-105"
+                    aria-label="Démarrer le scan">
+                    Start Scan
+                </button>
+                <button id="stopScan"
+                    class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition transform hover:scale-105"
+                    aria-label="Arrêter le scan">
+                    Stop Scan
+                </button>
+            </div>
+        </div>
+
+        <!-- Retour Button -->
+        <div class="mt-6 text-center">
+            <button onclick="window.location.href='/';"
+                class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition">
+                Retour à la page d'accueil
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div id="confirmationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full">
+            <h3 class="text-lg font-semibold text-center">Confirmer votre présence <span id="activityName"></span></h3>
+            <div id="modalContent" class="mt-4">
+                <p id="candidateInfo">Nom: <span id="candidateName"></span></p>
+                <p id="activityInfo">Activité: </p>
+            </div>
+            <div class="flex justify-center space-x-4 mt-4">
+                <button id="confirmPresence" class="px-6 py-2 bg-green-600 text-white rounded-lg">Confirmer</button>
+                <button id="closeModal" class="px-6 py-2 bg-gray-600 text-white rounded-lg">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        let scannerInstance = null;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const resultElement = document.getElementById('result');
+            const startScanButton = document.getElementById('startScan');
+            const stopScanButton = document.getElementById('stopScan');
+
+            // Modal Elements
+            const confirmationModal = document.getElementById('confirmationModal');
+            const candidateNameElement = document.getElementById('candidateName');
+            const activityNameElement = document.getElementById('activityName');
+            const candidateInfo = document.getElementById('candidateInfo');
+            const activityInfo = document.getElementById('activityInfo');
+            const confirmPresenceButton = document.getElementById('confirmPresence');
+            const closeModalButton = document.getElementById('closeModal');
+
+            // Fonction de succès du scan
+            function onScanSuccess(decodedText) {
+                resultElement.textContent = `QR Code détecté : ${decodedText}`;
+
+                
+                try {
+                    const data = JSON.parse(decodedText);
+                    // Par exemple : data = { candidateName: 'John Doe', activityName: 'Yoga' }
+
+                    // Afficher le modal avec les informations du candidat et de l'activité
+                    candidateNameElement.textContent = data.candidateName;
+                    activityNameElement.textContent = data.activityName;
+
+                    confirmationModal.classList.remove('hidden'); // Afficher le modal
+
+                    // Action de confirmation
+                    confirmPresenceButton.addEventListener('click', () => {
+                        // Faites une requête POST pour enregistrer la présence
+                        fetch('/store', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                        .getAttribute('content')
+                                },
+                                body: JSON.stringify({
+                                    firstname: data.candidateName.split(' ')[
+                                        0], // Prenez le prénom du nom complet
+                                    lastname: data.candidateName.split(' ')[
+                                        1], // Prenez le nom de famille
+                                    email: data
+                                        .candidateEmail, // L'email doit être inclus dans le QR Code
+                                    id: data.activityId // ID de l'activité
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert('Présence confirmée avec succès');
+                                    confirmationModal.classList.add('hidden'); // Fermer le modal
+                                } else {
+                                    alert('Erreur lors de la confirmation de la présence');
+                                }
+                            })
+                            .catch(error => console.error('Erreur:', error));
+                    });
+
+                    // Fermer le modal sans confirmation
+                    closeModalButton.addEventListener('click', () => {
+                        confirmationModal.classList.add('hidden');
+                    });
+
+                } catch (error) {
+                    alert('Erreur de format du QR Code.');
+                }
+            }
+
+            // Démarrer le scanner
+            function startScanner() {
+                if (!scannerInstance) {
+                    scannerInstance = new Html5Qrcode("qr_reader");
+                }
+                scannerInstance.start({
+                        facingMode: "environment"
+                    }, // Caméra arrière
+                    {
+                        fps: 10,
+                        qrbox: 250
+                    },
+                    onScanSuccess,
+                    (errorMessage) => {
+                        console.warn(`Erreur de scan : ${errorMessage}`);
+                        resultElement.textContent = "Erreur de scan, veuillez réessayer.";
+                    }
+                ).catch(err => {
+                    console.error("Erreur de démarrage : ", err);
+                    if (err.name === "NotFoundError") {
+                        alert("Caméra non détectée. Veuillez connecter un périphérique vidéo.");
+                    } else {
+                        alert(`Erreur : ${err.message}`);
+                    }
+                });
+            }
+
+            // Arrêter le scanner
+            function stopScanner() {
+                if (scannerInstance) {
+                    scannerInstance.stop().then(() => {
+                        scannerInstance.clear();
+                        resultElement.textContent = "";
+                    }).catch(err => {
+                        console.error("Erreur d'arrêt : ", err);
+                    });
+                }
+            }
+
+            startScanButton.addEventListener('click', startScanner);
+            stopScanButton.addEventListener('click', stopScanner);
+        });
+    </script>
+</body>
+
+</html>

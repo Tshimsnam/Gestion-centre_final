@@ -6,7 +6,7 @@ use App\Http\Controllers\MailController;
 use App\Http\Controllers\NotificationController;
 
 Route::middleware('auth')->group(function () {
-    Route::get('notifications/sendMail/activites', [MailController::class, 'sendMailActivite'])->name('sendMailActivite');
+    Route::post('notifications/sendMail/activites', [MailController::class, 'sendMailActivite'])->name('sendMailActivite');
     Route::get('notifications/sendMail', [MailController::class, 'sendMail'])->name('sendMail');
     Route::get('notifications/autocomplete', [MailController::class, 'autocomplete'])->name('autocomplete');
     Route::get('notifications/sendSms', [SmsController::class, 'sendSms'])->name('sendSms');
