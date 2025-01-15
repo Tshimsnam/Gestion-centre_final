@@ -44,7 +44,8 @@
                         <div id="accordion-collapse-body-1" class="hidden"
                             aria-labelledby="accordion-collapse-heading-1">
                             <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-                                <p class="mb-2 text-gray-800 dark:text-white"> {!! $event->content ?? null !!}</p>
+                                <div class="mb-2 text-gray-800 dark:text-white bg-gray-900 dark:bg-gray-800">
+                                    {!! $event->content ?? null !!}</div>
 
                             </div>
                         </div>
@@ -634,42 +635,42 @@ if ($startDate <= $now && $endDate >= $now) {
 
 
 <script>
-// Animation des lignes du tableau
-document.querySelectorAll('#usersTable tbody tr').forEach(row => {
-    row.addEventListener('mouseenter', () => {
-        row.classList.add('bg-gray-50', 'dark:bg-gray-700', 'transition-colors', 'duration-150');
+    // Animation des lignes du tableau
+    document.querySelectorAll('#usersTable tbody tr').forEach(row => {
+        row.addEventListener('mouseenter', () => {
+            row.classList.add('bg-gray-50', 'dark:bg-gray-700', 'transition-colors', 'duration-150');
+        });
+        row.addEventListener('mouseleave', () => {
+            row.classList.remove('bg-gray-50', 'dark:bg-gray-700');
+        });
     });
-    row.addEventListener('mouseleave', () => {
-        row.classList.remove('bg-gray-50', 'dark:bg-gray-700');
-    });
-});
 
-// Recherche en temps réel
-const searchInput = document.getElementById('search');
-const resultsContainer = document.getElementById('resultsContainer');
+    // Recherche en temps réel
+    const searchInput = document.getElementById('search');
+    const resultsContainer = document.getElementById('resultsContainer');
 
-searchInput.addEventListener('input', debounce(async (e) => {
-    const searchTerm = e.target.value;
-    if (searchTerm.length < 2) return;
+    searchInput.addEventListener('input', debounce(async (e) => {
+        const searchTerm = e.target.value;
+        if (searchTerm.length < 2) return;
 
-    try {
-        // Simuler une recherche (à remplacer par votre logique)
-        const results = await searchUsers(searchTerm);
-        displayResults(results);
-    } catch (error) {
-        console.error('Erreur de recherche:', error);
-    }
-}, 300));
+        try {
+            // Simuler une recherche (à remplacer par votre logique)
+            const results = await searchUsers(searchTerm);
+            displayResults(results);
+        } catch (error) {
+            console.error('Erreur de recherche:', error);
+        }
+    }, 300));
 
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
             clearTimeout(timeout);
-            func(...args);
+            timeout = setTimeout(later, wait);
         };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
+    }
 </script>

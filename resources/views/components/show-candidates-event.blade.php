@@ -52,7 +52,7 @@
                 class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="p-4">
+                        <th  class="p-4">
                             <div class="flex items-center">
                                 {{-- <input id="select-all" type="checkbox"
                                     class="w-4 h-4 text-[#FF7322] hover:cursor-pointer bg-gray-100 border-gray-300 rounded focus:ring-[#FF7322] dark:focus:ring-[#FF7322] dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"> --}}
@@ -69,30 +69,30 @@
                                 </svg>
                             </div>
                         </th>
-                        <th scope="col"
+                        <th 
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Prénom</th>
-                        <th scope="col"
+                        <th 
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Nom</th>
                         @if (
                             !in_array('Email', $labels) &&
                                 !in_array('E-mail', $labels) &&
                                 !in_array('E-mail(obligatoire)', $labels) &&
                                 !in_array('Adresse Email', $labels))
-                            <th scope="col"
+                            <th 
                                 class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Email</th>
                         @endif
-                        <th scope="col"
+                        <th 
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Genre</th>
                         @foreach (array_unique($labels) as $label)
                             @if (isset($label))
-                                <th scope="col"
+                                <th 
                                     class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                     {{ $label }}</th>
                             @endif
                         @endforeach
-                        <th scope="col"
+                        <th 
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Status</th>
-                        <th scope="col"
+                        <th 
                             class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">Actions</th>
                     </tr>
                 </thead>

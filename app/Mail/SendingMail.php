@@ -35,23 +35,24 @@ class SendingMail extends Mailable
 
     public function build()
     {
-        // Remplacez [Nom de l'activité] par le titre de l'activité
+
         $body = str_replace('[Nom de l\'activité]', $this->title, $this->message);
 
-        // Assurez-vous que $this->codeqr est le chemin du fichier
-        $filePath = storage_path('app/public/' . $this->codeqr); // Chemin complet
+
+        $filePath = storage_path('app/public/' . $this->codeqr);
 
         return $this->view('notifications.mail')
             ->subject($this->subject)
             ->with([
                 'prenom' => $this->prenom,
                 'nom' => $this->nom,
-                'body' => $body, // Utilisez la variable modifiée
+                'body' => $body,
                 'date' => $this->date,
                 'lieu' => $this->lieu,
+                'image' => $filePath
             ])
             ->attach($filePath, [
-                'as' => 'qrcode.png', // Nom du fichier dans le mail
+                'as' => 'qrcode.png',
                 'mime' => 'image/png',
             ]);
     }

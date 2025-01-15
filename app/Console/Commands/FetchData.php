@@ -38,9 +38,19 @@ class FetchData extends Command
 
             $url = env('API_URL');
 
-            $response = Http::timeout("100000")->get("$url/events/active");
+            $response = Http::timeout("100000")->get("http://10.143.41.70:8000/2024/odc/public/api/events/active");
 
             if ($response->successful()) {
+
+                $data = $response->object();
+                // Check if the API returned an error code (401: Unauthorized)
+                if (isset($data->code) && $data->code === 401) {
+                    $this->error("Token expired, refreshing...");
+
+                    // Refresh the token and retry the request
+                    $this->refreshToken();
+                }
+
                 $workshops = $response->json()['data'];
 
                 $result = array_reverse($workshops);
@@ -94,7 +104,7 @@ class FetchData extends Command
                             'creator' => json_encode($workshopData['creator']),
                             'end_date' => $end,
                             'location' => isset($workshopData['location']) ? $workshopData['location'] : '',
-                            'thumbnail_url'=> isset($workshopData['thumbnailURL']) ? $workshopData['thumbnailURL'] : '',
+                            'thumbnail_url' => isset($workshopData['thumbnailURL']) ? $workshopData['thumbnailURL'] : '',
                         ];
 
                         $activites = Activite::firstOrCreate(['_id' => $workshopData['_id']], $activityData);
@@ -117,6 +127,10 @@ class FetchData extends Command
         }
     }
 
-
-
+    private function refreshToken()
+    {
+        $url = env('API_URL');
+        // Implement your token refresh logic here
+        $response = Http::timeout(10000)->post("http://10.143.41.70:8000/2024/odc/public/api/generer/token");
+    }
 }

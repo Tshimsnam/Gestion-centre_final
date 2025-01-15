@@ -83,10 +83,12 @@
                 aria-controls="speed-dial-menu-horizontal" aria-expanded="false"
                 class="flex items-center justify-center text-white bg-[#FF7322] rounded-full w-14 h-14 hover:bg-[#ff7322d0] transition duration-200 ease-in-out focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-[#FF7322] dark:hover:bg-[#ff7322d0] dark:focus:ring-blue-800">
 
-                
-                <svg class="w-5 h-5 transition-transform group-hover:rotate-45" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6h8m-8 4h12M6 14h8m-8 4h12"/>
-                  </svg>
+
+                <svg class="w-5 h-5 transition-transform group-hover:rotate-45" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M6 6h8m-8 4h12M6 14h8m-8 4h12" />
+                </svg>
 
                 <span class="sr-only">Open actions menu</span>
             </button>
@@ -117,17 +119,100 @@
     </div>
 
     <div class="flex justify-between items-center">
-        <div class="ml-2">
-            <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#ff7322] text-white hover:bg-[#ff6822] focus:outline-none focus:bg-[#ff6822] disabled:opacity-50 disabled:pointer-events-none"
-                type="button">Envoyer
-                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 10 6">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m1 1 4 4 4-4" />
-                </svg>
-            </button>
+
+        <button id="multiLevelDropdownButton" data-dropdown-toggle="multi-dropdown"
+            class="bg-[#ff7322] text-white hover:bg-[#ff6822]  focus:bg-[#ff6822] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-[#ff7322] dark:hover:bg-[#ff7322] dark:focus:ring-[#ff7322]"
+            type="button">Plus <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="m1 1 4 4 4-4" />
+            </svg>
+        </button>
+
+        <!-- Dropdown menu -->
+        <div id="multi-dropdown"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="multiLevelDropdownButton">
+                <li>
+                    <div class="ml-2">
+                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown"
+                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#ff7322] text-white hover:bg-[#ff6822] focus:outline-none focus:bg-[#ff6822] disabled:opacity-50 disabled:pointer-events-none"
+                            type="button">Envoyer
+                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="none" viewBox="0 0 10 6">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 4 4 4-4" />
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+                <li>
+                    <button id="doubleDropdownButton" data-dropdown-toggle="doubleDropdown"
+                        data-dropdown-placement="right-start" type="button"
+                        class="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Importation<svg
+                            class="w-2.5 h-2.5 ms-3 rtl:rotate-180" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m1 9 4-4-4-4" />
+                        </svg></button>
+                    <div id="doubleDropdown"
+                        class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="doubleDropdownButton">
+                            <li>
+                                <form action="{{ route('import.participants', $activite->id) }}" method="POST"
+                                    enctype="multipart/form-data" class="flex items-center gap-2">
+                                    @csrf
+                                    <input type="hidden" name="activite" value="{{ $activite->id }}">
+
+                                    <div class="flex-grow">
+                                        <input required type="file" id="file" name="file" accept=".xlsx"
+                                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50
+                                                   dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+                                                   focus:outline-none"
+                                            aria-describedby="file_input_help">
+                                    </div>
+
+                                    <button type="submit"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+
+                                        Importer
+                                    </button>
+
+
+                                </form>
+                            </li>
+                            <li>
+
+                                <a href="{{ asset('model_importation_participant.xlsx') }}" download
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Télécharger le modèle de fichier
+                                </a>
+                            </li>
+                            {{-- <li>
+                                <a href="#"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Billing</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Rewards</a>
+                            </li> --}}
+                        </ul>
+                    </div>
+                </li>
+                <li>
+
+                    <button id="createUserBtn"
+                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+
+                        Ajouter un participant
+                    </button>
+                </li>
+
+            </ul>
         </div>
+
+
 
         <div id="dropdown"
             class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-28 dark:bg-gray-700">
@@ -145,316 +230,23 @@
 
 
 
-        <form action="{{ route('import.participants', $activite->id) }}" method="POST" enctype="multipart/form-data"
-            class="flex items-center gap-2">
-            @csrf
-            <input type="hidden" name="activite" value="{{ $activite->id }}">
 
-            <div class="flex-grow">
-                <input required type="file" id="file" name="file" accept=".xlsx"
-                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50
-                           dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                           focus:outline-none"
-                    aria-describedby="file_input_help">
-            </div>
-
-            <button type="submit"
-                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white
-                       rounded-lg border border-transparent bg-[#FF7322] hover:bg-[#FF6822]
-                       focus:outline-none focus:bg-[#FF6822]
-                       disabled:opacity-50 disabled:pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 -960 960 960"
-                    fill="#e8eaed">
-                    <path
-                        d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-                </svg>
-                Importer
-            </button>
-
-            <a href="{{ asset('model_importation_participant.xlsx') }}" download
-                class="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-white
-                       bg-[#FF7322] hover:bg-[#FF6822] focus:outline-none focus:ring-4 focus:ring-blue-300
-                       rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" fill="currentColor"
-                    class="bi bi-download" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd"
-                        d="M.5 15a.5.5 0 0 1 .5-.5h15a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5zM8 1a.5.5 0 0 1 .5.5v10.793l3.146-3.147a.5.5 0 0 1 .708.708l-4.5 4.5a.5.5 0 0 1-.708 0l-4.5-4.5a.5.5 0 0 1 .708-.708L7.5 12.293V1.5A.5.5 0 0 1 8 1z" />
-                </svg>
-                Télécharger le modèle de fichier
-            </a>
-        </form>
 
         <div class="ml-2">
-            <button id="createUserBtn"
-                class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:bg-[#FF6822] disabled:opacity-50 disabled:pointer-events-none">
-                <svg class="w-6 h-6 text-white dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M5 12h14m-7 7V5" />
-                </svg>
-                Ajouter un participant
-            </button>
+
         </div>
     </div>
 </div>
 
 
-<!-- Modal choix certificat -->
-@section('modalparticipants')
-    <div id="choixCertificat-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Selectionner un model du certificat
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="choixCertificat-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <form action="" method="post" class="p-4 md:p-5">
-                    @method('GET')
-                    <div class="flex justify-center  space-x-4">
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="semestre"
-                                class="flex justify-center mb-2 text-sm font-medium text-gray-900 dark:text-white">Choisir
-                                Model
-                            </label>
-                            <select id="certificat" name="certificat"
-                                class="justify-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="1">Modèle Parcours Académique</option>
-                                <option value="2">Modèle Parcours Fablab</option>
-                                <option value="3">Modèle Standard</option>
-                                <option value="4">Modèle Super codeurs</option>
-                                <option value="5">Modèle maker junior</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex justify-center mt-6">
-                        <button type="submit"
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#FF7322] text-white hover:bg-[#FF6822] focus:outline-none focus:bg-[#FF6822] disabled:opacity-50 disabled:pointer-events-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                                width="24px" fill="#e8eaed">
-                                <path
-                                    d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z" />
-                            </svg>
-                            Télécharger
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-@endsection
 
-@section('modalparticipants')
-    <!-- Mail modal -->
-    <div id="mail-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-5xl max-h-full p-4">
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Envoi des mails
-                    </h3>
-                    <button type="button"
-                        class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="mail-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-
-                <form action="{{ route('sendMailActivite') }}" class="p-4 md:p-5" method="post">
-                    @csrf
-                    @method('GET')
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div class="col-span-2">
-                            <label for="activity"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activité</label>
-                            <select id="activity" name="activity"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="{{ $activite->id }}">{{ $activite->title }}</option>
-                            </select>
-                        </div>
-                        <div id="model-mail-div" class="col-span-2">
-                            <label id="label-model-mail" for="model-mail"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modèle de
-                                mail</label>
-                            <select id="model-mail" name="model-mail"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option value="" selected="">Sélectionner un modèle de mail</option>
-                                @foreach ($modelMail as $item)
-                                    <option value="{{ $item->message }}">{{ $item->title }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="subject"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Sujet</label>
-                            <input type="text" name="subject" id="subject"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                placeholder="Entrer un sujet de mail" required="">
-                        </div>
-
-                        {{ csrf_field() }}
-
-                        <div class="col-span-2">
-                            <label for="message"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Message</label>
-                            <textarea id="message" name="message" rows="6"
-                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Écrivez votre message ici"></textarea>
-                        </div>
-                    </div>
-                    <button type="submit"
-                        class="text-white inline-flex w-full justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Envoyer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Sms modal -->
-    <div id="sms-modal" tabindex="-1" aria-hidden="true"
-        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative w-full max-w-5xl max-h-full p-4">
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <div class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Envoi des SMS
-                    </h3>
-                    <button type="button"
-                        class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent rounded-lg hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="sms-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-
-                {{-- Form for sending SMS (commented out for now) --}}
-                {{-- <form action="{{ route('sendSms') }}" class="p-4 md:p-5" method="post">
-                            @csrf
-                            @method('GET')
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div class="col-span-2">
-                                    <label for="sms-activity"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Activité</label>
-                                    <select id="sms-activity" name="sms-activity"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="{{ $activite->id }}">{{ $activite->title }}</option>
-                                    </select>
-                                </div>
-                                <div id="model-sms-div" class="col-span-2">
-                                    <label id="label-model-sms" for="model-sms"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Modèle de
-                                        SMS</label>
-                                    <select id="model-sms" name="model-sms"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" selected="">Sélectionner un modèle de SMS</option>
-                                        @foreach ($modelSms as $item)
-                                            <option value="{{ $item->message }}">{{ $item->title }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-span-2">
-                                    <label for="sms-cible"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cible</label>
-                                    <select id="sms-cible" name="sms-cible"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="tout-le-monde" selected="">Tout le monde</option>
-                                        <option value="activité">Par rapport à une activité</option>
-                                        <option value="age-cible">Âge</option>
-                                        <option value="sexe-cible">Genre</option>
-                                        <option value="personnalise">Personnalisé</option>
-                                    </select>
-                                </div>
-                                <div id="sms-per-activity-div" class="col-span-2">
-                                    <label for="sms-per-activity"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Par rapport à
-                                        une activité</label>
-                                    <input type="text" list="sms-activity_name_list" name="sms-per-activity"
-                                        id="sms-per-activity"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="Entrer une activité">
-                                    <div id="sms-activity_name_list" class="text-black bg-gray-300 rounded-lg "></div>
-                                </div>
-
-                                {{ csrf_field() }}
-
-                                <div id="sms-age-div" class="col-span-2">
-                                    <label for="sms-age"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Âge</label>
-                                    <select id="sms-age" name="sms-age"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" selected="">Sélectionner un âge</option>
-                                        <option value=">18">> à 18</option>
-                                        <option value="<18">< à 18</option>
-                                        <option value=">25">> à 25</option>
-                                        <option value=">30">> à 30</option>
-                                    </select>
-                                </div>
-                                <div id="sms-sexe-div" class="col-span-2">
-                                    <label for="sms-sexe"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Genre</label>
-                                    <select id="sms-sexe" name="sms-sexe"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        <option value="" selected="">Sélectionner un genre</option>
-                                        <option value="M">Masculin</option>
-                                        <option value="F">Féminin</option>
-                                    </select>
-                                </div>
-                                <div id="sms-personnalise-div" class="col-span-2">
-                                    <label for="sms-person"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Personnalisé</label>
-                                    <input type="text" name="sms-person" id="sms-person"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                        placeholder="821002525, 821060509, ...">
-                                </div>
-                                <div class="col-span-2">
-                                    <label for="sms-message"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Message</label>
-                                    <textarea id="sms-message" name="sms-message" rows="6"
-                                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                        placeholder="Écrivez votre message ici"></textarea>
-                                </div>
-                            </div>
-                            <button type="submit"
-                                class="text-white inline-flex w-full justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Envoyer
-                            </button>
-                        </form> --}}
-            </div>
-        </div>
-    </div>
-@endsection
 
 <div class="py-11 relative overflow-x-auto">
     <div class="success"></div>
     @if (isset($participantsData))
         <table id="participantTable"
-            class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-            <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 cell-border">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="p-4">
                         <div class="flex items-center">
@@ -485,9 +277,9 @@
                     <th scope="col" class="px-6 py-3 text-left">Certificat</th>
                 </tr>
             </thead>
-            <tbody class="text-sm text-gray-600">
+            <tbody class="">
                 @foreach ($participantsData as $key => $participant)
-                    <tr class="hover:bg-gray-50 transition-colors">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 hover:cursor-pointer">
                         <td class="w-4 p-4">
                             <div class="flex items-center">
                                 <input id="checkbox{{ $participant['id'] }}" data-id="{{ $participant['id'] }}"
