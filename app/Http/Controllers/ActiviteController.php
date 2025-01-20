@@ -164,7 +164,7 @@ class ActiviteController extends Controller
             $criteres = Critere::where('activite_id', $activite->id)->get();
             $candidats = Candidat::where('activite_id', $activite->id)->get();
             $participants = Candidat::where('activite_id', $activite->id)->where('status', 'accept')->get();
-            $total_p = Candidat::where('activite_id', $activite->id)->where('status', 'Accept')->get()->count();
+            $total_p = Candidat::where('activite_id', $activite->id)->where('status', 'accept')->get()->count();
             $total_ih = Candidat::where('activite_id', $activite->id)
                 ->whereHas('odcuser', function ($query) {
                     $query->where('gender', 'like', 'male');
@@ -180,8 +180,8 @@ class ActiviteController extends Controller
             $total_pf = $total_p - $total_ph;
             $total_if = $candidats->count() - $total_ih;
 
-            $date1 = new DateTime($activite->startDate);
-            $date2 = new DateTime($activite->endDate);
+            $date1 = new DateTime($activite->start_date);
+            $date2 = new DateTime($activite->end_date);
             $nbj = date_diff($date1, $date2)->days + 1;
 
             return view('activites.show', compact(
@@ -751,8 +751,8 @@ class ActiviteController extends Controller
     {
         $criteres = Critere::where('event_id', $activite->id)->get();
         $candidats = Candidat::where('id_event', $activite->_id)->get();
-        $participants = Candidat::where('id_event', $activite->_id)->where('status', 'accepted')->get();
-        $total_p = Candidat::where('id_event', $activite->_id)->where('status', 'Accepted')->get()->count();
+        $participants = Candidat::where('id_event', $activite->_id)->where('status', 'accept')->get();
+        $total_p = Candidat::where('id_event', $activite->_id)->where('status', 'accept')->get()->count();
         $total_ih = Candidat::where('id_event', $activite->_id)
             ->whereHas('odcuser', function ($query) {
                 $query->where('gender', 'like', 'male');
@@ -777,13 +777,6 @@ class ActiviteController extends Controller
         return view('events.rapport', compact("activite$activite", "candidats", "total_ih", "total_if", "total_ph", "total_pf", "total_p", "participants", "nbj", "criteres"));
     }
 
-    public function nouveaux(Activite $event)
-    {
+ 
 
-        $this->id_event = $event->id;
-        //return response()->json(['pays'=>"congo"]);
-        $candidats = DB::select("SELECT firstName, lastName, gender, candidats.id, odcuser_id FROM `candidats`, `odcusers` WHERE candidats.odcuser_id = odcusers.id AND event_id = " . $event->id . " AND odcuser_id NOT IN (SELECT odcuser_id FROM candidats WHERE event_id <> " . $event->id . ")");
-
-        return response()->json($candidats, 200);
-    }
 }
