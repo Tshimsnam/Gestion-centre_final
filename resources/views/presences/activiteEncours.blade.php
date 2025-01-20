@@ -259,43 +259,97 @@
     </script>
 
     <script>
-        $('.validateForm').on("submit", function(e) {
+        $('.validateForm').on("submit", async function(e) {
             e.preventDefault();
-            var formData = $(this).serialize();
-            var activityId = $(this).find('input[name="id"]').val();
-            $.ajax({
-                type: 'POST',
-                url: '/filtrer/' + activityId,
-                data: formData,
-                success: function(data) {
-                    if (data.error ===
-                        "Désole, vous n\'avez pas de compte. Contactez un agent de la sécurité pour vous créer un compte. Merci !"
-                    ) {
-                        $('.error').text(
-                            "Désole, vous n'avez pas de compte. Contactez un agent de la sécurité pour vous créer un compte. Merci !"
-                        )
-                        $('.notfound').removeClass('hidden')
-                        $('.filterForms').addClass('hidden');
-                        $('.modal-title').text("Confirmation des informations")
-                        $('.radiodiv').addClass('hidden');
-                    } else if (data.error ===
-                        "Désolé, vous n\'êtes pas enregistré sur cette activité. Merci !") {
-                        $('.modal-title').text("Enregistrez vous     à l'activité")
-                        $("#confirmDiv" + activityId).removeClass('hidden');
-                        $('.filterForms').addClass('hidden');
-                        $('#activite' + activityId).attr('value', data.title);
+
+            // Variables
+            const $form = $(this);
+            const formData = $form.serialize();
+            const activityId = $form.find('input[name="id"]').val();
+
+            try {
+                // Envoi AJAX
+                const response = await fetch(`/filtrer/${activityId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData,
+                });
+
+                const data = await response.json();
+
+                // Gestion des réponses
+                if (data.error) {
+                    // Afficher une alerte SweetAlert pour les erreurs
+                    if (data.error.includes("Désolé, vous n'êtes pas enregistré sur cette activité. Merci !")) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Candidat introuvable',
+                            text: "Le candidat n'existe pas dans cette formation. Veuillez vérifier et réessayer.",
+                            confirmButtonText: 'Ok',
+                        });
                     } else {
-                        $('.filterForms').addClass('hidden');
-                        $("#confirmDiv" + activityId).removeClass('hidden');
-                        $('.modal-title').text("Confirmation des informations")
-                        $('#firstname' + activityId).attr('value', data.prenom);
-                        $('#lastname' + activityId).attr('value', data.nom);
-                        $('#confirm-email' + activityId).attr('value', data.email);
-                        $('#activite' + activityId).attr('value', data.activite);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: data.error,
+                            confirmButtonText: 'Ok',
+                        });
                     }
+                } else {
+                    handleSuccess(data, activityId); // Gestion des cas réussis
                 }
-            });
+            } catch (error) {
+                // Gestion des erreurs réseau ou serveur
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: "Une erreur est survenue lors de la requête. Veuillez réessayer plus tard.",
+                    confirmButtonText: 'Ok',
+                });
+                console.error("Erreur lors de la requête :", error);
+            }
         });
+
+        // Fonction pour gérer le succès
+        function handleSuccess(data, activityId) {
+            $('.filterForms').addClass('hidden');
+            $(`#confirmDiv${activityId}`).removeClass('hidden');
+            $('.modal-title').text("Confirmation des informations");
+
+            // Mise à jour des champs
+            $(`#firstname${activityId}`).val(data.prenom);
+            $(`#lastname${activityId}`).val(data.nom);
+            $(`#confirm-email${activityId}`).val(data.email);
+            $(`#activite${activityId}`).val(data.activite);
+        }
+
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Succès',
+                text: '{{ session('success') }}',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: '{{ session('error') }}',
+                toast: true,
+                position: 'top-end',
+                timer: 3000,
+                showConfirmButton: false,
+                timerProgressBar: true,
+            });
+        @endif
     </script>
 </body>
 

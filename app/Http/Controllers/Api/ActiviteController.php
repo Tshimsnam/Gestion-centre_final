@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use App\Models\Activite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
 use Yajra\DataTables\Facades\DataTables;
@@ -215,31 +216,106 @@ class ActiviteController extends Controller
     public function parcours(Activite $event)
     {
         $this->id_event = $event->id;
-        $candidats = DB::select("SELECT first_name, last_name, gender, candidats.id, odcuser_id
-            FROM `candidats`, `odcusers`
-            WHERE candidats.odcuser_id = odcusers.id
-            AND activite_id = ?
-            AND odcuser_id IN (
-                SELECT odcuser_id
-                FROM candidats c, activites a
-                WHERE c.activite_id = a.id
-                AND c.activite_id <> ?
-                AND title LIKE ?
-            )", [$event->id, $event->id, '%parcours%']);
 
-        $tb = [];
-        foreach ($candidats as $candidat) {
-            $this->candidat = $candidat;
-            $events = Activite::select('title', 'id')->where('title', 'like', '%parcours%')
-                ->where('id', '<>', $event->id)
-                ->whereHas('candidat', function ($query) {
-                    $query->where('odcuser_id', $this->candidat->odcuser_id);
-                })->get();
+        try {
+            // Récupérer les candidats ayant participé à des formations avec "parcours"
+            $candidats = DB::table('candidats')
+                ->join('odcusers', 'candidats.odcuser_id', '=', 'odcusers.id')
+                ->where('candidats.status', 'accept')
+                ->where('candidats.activite_id', $event->id)
+                ->whereIn('candidats.odcuser_id', function ($query) use ($event) {
+                    $query->select('candidats.odcuser_id')
+                        ->from('candidats')
+                        ->join('activites', 'candidats.activite_id', '=', 'activites.id')
+                        ->where('activites.title', 'like', '%parcours%')
+                        ->where('candidats.activite_id', '<>', $event->id);
+                })
+                ->select('odcusers.first_name', 'odcusers.last_name', 'odcusers.gender', 'candidats.id', 'candidats.odcuser_id')
+                ->get();
 
-            $candidat->events = $events;
+            // Ajouter les événements pour chaque candidat
+            $candidats->map(function ($candidat) use ($event) {
+                $events = Activite::select('title', 'id')
+                    ->where('title', 'like', '%parcours%')
+                    ->where('id', '<>', $event->id)
+                    ->whereHas('candidat', function ($query) use ($candidat) {
+                        $query->where('odcuser_id', $candidat->odcuser_id);
+                    })
+                    ->get();
 
-            $tb[] = $candidat;
+                // Attacher les événements au candidat
+                $candidat->events = $events;
+            });
+
+            // Si aucun candidat n'est trouvé, retourner une réponse vide
+            if ($candidats->isEmpty()) {
+                return response()->json([]);
+            }
+
+            return response()->json($candidats, 200);
+        } catch (\Throwable $th) {
+            // Gérer les erreurs
+            return response()->json(['error' => 'Une erreur est survenue'], 500);
         }
-        return response()->json($tb, 200);
+    }
+
+
+    public function nouveaux(Activite $event)
+    {
+        try {
+            $candidats = DB::table('candidats')
+                ->join('odcusers', 'candidats.odcuser_id', '=', 'odcusers.id')
+                ->where('candidats.activite_id', $event->id)
+                ->where('candidats.status', 'accept') // Filtrer uniquement les candidats acceptés
+                ->whereNotExists(function ($query) use ($event) {
+                    $query->select('odcuser_id')
+                        ->from('candidats as c')
+                        ->whereColumn('c.odcuser_id', 'candidats.odcuser_id')
+                        ->where('c.activite_id', '<>', $event->id);
+                })
+                ->select('odcusers.first_name', 'odcusers.last_name', 'odcusers.gender', 'candidats.id', 'candidats.odcuser_id')
+                ->get();
+
+          
+            if ($candidats->isEmpty()) {
+                return response()->json([]);
+            }
+
+            return response()->json($candidats, 200);
+        } catch (\Throwable $th) {
+
+            Log::error('Erreur dans la méthode nouveaux : ' . $th->getMessage());
+
+            return response()->json([
+                'error' => 'Une erreur est survenue lors de la récupération des candidats.'
+            ], 500);
+        }
+    }
+
+
+    public function candidatsAvecCinqFormations(Activite $event)
+    {
+        try {
+            $candidats = DB::table('candidats')
+                ->where('candidats.activite_id', $event->id)
+                ->where('candidats.status', 'accept')
+                ->join('odcusers', 'candidats.odcuser_id', '=', 'odcusers.id')
+                ->select('odcusers.first_name', 'odcusers.last_name', 'odcusers.gender', DB::raw('COUNT(candidats.id) as total_formations'))
+                ->groupBy('candidats.odcuser_id', 'odcusers.first_name', 'odcusers.last_name', 'odcusers.gender')
+                ->having('total_formations', '>=', 5)
+                ->get();
+
+            if ($candidats->isEmpty()) {
+                return response()->json([]);
+            }
+
+            return response()->json($candidats, 200);
+        } catch (\Throwable $th) {
+            Log::error('Erreur dans la méthode candidatsAvecCinqFormations : ' . $th->getMessage());
+
+            return response()->json([
+                'error' => 'Une erreur est survenue lors de la récupération des candidats.'
+            ], 500);
+        }
     }
 }

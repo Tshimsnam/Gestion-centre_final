@@ -243,11 +243,9 @@
                                 <h3 class="font-semibold text-gray-700 dark:text-gray-200">Durée</h3>
                             </div>
                             <div class="text-sm text-gray-600 dark:text-gray-300">
-                                @if ($nbj == 1)
-                                    1 jour
-                                @else
-                                    {{ $nbj }} jours
-                                @endif
+
+                                {{ $nbj }} jours
+
                             </div>
                         </div>
                     </div>
@@ -271,25 +269,25 @@
                         $statusColor = '';
                         $percent = 0;
 
-                        // Détermination du statut de l'événement
-if ($startDate <= $now && $endDate >= $now) {
-    // Événement en cours
-    $daysElapsed = $startDate->diffInDays($now);
-    $percent = min(($daysElapsed * 100) / max($eventDuration, 1), 100);
-    $status = 'En cours';
-    $statusColor = 'green';
-} elseif ($startDate > $now) {
-    // Événement à venir
-    $percent = min(($daysSinceCreation * 100) / max($daysFromCreateToStart, 1), 100);
-    $status = $daysUntilStart === 1 ? 'Dans 1 jour' : "Dans $daysUntilStart jours";
-    $statusColor = 'blue';
-} else {
-    // Événement terminé
-    $percent = 100;
-    $daysAgo = abs($daysUntilEnd);
-    $status = $daysAgo === 1 ? 'Il y a 1 jour' : "Il y a $daysAgo jours";
-    $statusColor = $daysAgo === 1 ? 'orange' : 'gray';
-                        }
+                                            // Détermination du statut de l'événement
+                        if ($startDate <= $now && $endDate >= $now) {
+                            // Événement en cours
+                            $daysElapsed = $startDate->diffInDays($now);
+                            $percent = min(($daysElapsed * 100) / max($eventDuration, 1), 100);
+                            $status = 'En cours';
+                            $statusColor = 'green';
+                        } elseif ($startDate > $now) {
+                            // Événement à venir
+                            $percent = min(($daysSinceCreation * 100) / max($daysFromCreateToStart, 1), 100);
+                            $status = $daysUntilStart === 1 ? 'Dans 1 jour' : "Dans $daysUntilStart jours";
+                            $statusColor = 'blue';
+                        } else {
+                            // Événement terminé
+                            $percent = 100;
+                            $daysAgo = abs($daysUntilEnd);
+                            $status = $daysAgo === 1 ? 'Il y a 1 jour' : "Il y a $daysAgo jours";
+                            $statusColor = $daysAgo === 1 ? 'orange' : 'gray';
+                                                }
                     @endphp
                     <div class="p-4 my-5 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
                         <div class="flex justify-between mb-2">

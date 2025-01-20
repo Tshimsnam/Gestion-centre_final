@@ -79,12 +79,42 @@ class PresenceController extends Controller
         if (isset($value[1]) && $value[1] !== "") {
             $email = $value[1];
             $odcuser = Odcuser::where('email', $email)->first();
+
+            // Vérifier si l'utilisateur existe
             if (!$odcuser) {
                 return [
-                    'error' => 'Désole, vous n\'avez pas de compte. Contactez un agent de la sécurité pour vous créer un compte. Merci !',
-                    'title' => $activity->title
+                    'error' => 'Désolé, vous n\'avez pas de compte. Contactez un agent de la sécurité pour vous créer un compte. Merci !',
+                    'title' => $activity->title,
                 ];
             }
+
+            // Vérifier si le candidat est inscrit à l'activité
+            $candidat = DB::table('candidat_attributes')
+                ->select(
+                    'candidat_attributes.candidat_id',
+                    'candidats.odcuser_id',
+                    'candidats.id',
+                    'odcusers.first_name',
+                    'odcusers.last_name',
+                    'odcusers.email',
+                    'activites.title'
+                )
+                ->join('candidats', 'candidats.id', '=', 'candidat_attributes.candidat_id')
+                ->join('activites', 'activites.id', '=', 'candidats.activite_id')
+                ->join('odcusers', 'odcusers.id', '=', 'candidats.odcuser_id')
+                ->where('candidat_attributes.value', 'like', "%$email%")
+                ->where('candidats.activite_id', $id)
+                ->where('candidats.status', 'accept')
+                ->first();
+
+            if (!$candidat) {
+                return [
+                    'error' => 'Désolé, vous n\'êtes pas enregistré sur cette activité. Merci !',
+                    'title' => $activity->title,
+                ];
+            }
+
+            // Retourner les informations du candidat
             return [
                 'prenom' => $odcuser->first_name,
                 'nom' => $odcuser->last_name,

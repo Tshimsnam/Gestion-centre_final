@@ -607,120 +607,216 @@
         </script>
         <script>
             const parcours = async (id) => {
-                $('#parcours-modal table tbody').html('')
-                let rep = await fetch('{{ route('events.api.parcours', $activite->id) }}')
-                    .then(response => response.json());
+                const tbodySelector = '#parcours-modal table tbody';
 
-                console.log('parcours', rep)
+                // Afficher le message de chargement
+                $(tbodySelector).html(`
+        <tr>
+            <td colspan="5" class="text-center py-4 text-gray-500">Chargement en cours...</td>
+        </tr>
+    `);
 
-                rep.map((data, i) => {
-                    var te = []
-                    var events = data.events
-                    for (let i = 0; i < events.length; i++) {
-                        te.push("<li> " + events[i].title + "</li>")
+                try {
+                    let rep = await fetch('{{ route('events.api.parcours', $activite->id) }}')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur HTTP : ${response.status}`);
+                            }
+                            return response.json();
+                        });
+
+                    // Vérification que la réponse est un tableau
+                    if (!Array.isArray(rep)) {
+                        throw new Error("La réponse n'est pas un tableau.");
                     }
 
-                    var ve = te.join('<br> ')
+                    // Si aucun candidat n'est trouvé
+                    if (rep.length === 0) {
+                        $(tbodySelector).html(`
+                <tr>
+                    <td colspan="5" class="text-center py-4 text-gray-500">
+                        Aucun candidat n'a participé à au moins 1 parcours.
+                    </td>
+                </tr>
+            `);
+                        return;
+                    }
 
-                    $('#parcours-modal table tbody').append(`
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ${i+1}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        ${data.first_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.last_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.gender}
-                                    </td>
+                    // Réinitialisation du tableau
+                    $(tbodySelector).html('');
 
-                                    <td class="px-6 py-4">
-                                        <ul>
-                                        ${ve}
-                                        </ul>
-                                    </td>
-                                </tr>
-                `)
-                })
-            }
+                    // Parcourir les candidats
+                    rep.map((data, index) => {
+                        // Générer les événements
+                        const eventsList = data.events.map(event => `<li>${event.title}</li>`).join('<br>');
+
+                        // Ajouter les données au tableau
+                        $(tbodySelector).append(`
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        ${index + 1}
+                    </th>
+                    <td class="px-6 py-4">${data.first_name}</td>
+                    <td class="px-6 py-4">${data.last_name}</td>
+                    <td class="px-6 py-4">${data.gender}</td>
+                    <td class="px-6 py-4">
+                        <ul>${eventsList}</ul>
+                    </td>
+                </tr>
+            `);
+                    });
+                } catch (error) {
+                    // Afficher l'erreur dans la console et informer l'utilisateur
+                    console.error("Erreur dans parcours:", error);
+                    $(tbodySelector).html(`
+            <tr>
+                <td colspan="5" class="text-center py-4 text-red-500">
+                    Une erreur est survenue. Veuillez réessayer plus tard.
+                </td>
+            </tr>
+        `);
+                }
+            };
         </script>
 
         <script>
             const cinq_event = async (id) => {
-                $('#cinq-modal table tbody').html('')
-                let rep = await fetch('{{ route('events.api.cinq', $activite->id) }}')
-                    .then(response => response.json());
+                const tbodySelector = '#cinq-modal table tbody';
+                $(tbodySelector).html(`
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-gray-500">Chargement en cours...</td>
+                    </tr>
+                `);
 
-                console.log('cinq', rep)
+                try {
+                    let rep = await fetch('{{ route('events.api.cinq', $activite->id) }}')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Erreur HTTP : ${response.status}`);
+                            }
+                            return response.json();
+                        });
 
-                rep.map((data, i) => {
-                    var te = []
-                    var events = data.events
-                    for (let i = 0; i < events.length; i++) {
-                        te.push("<li> " + events[i].title + "</li>")
+                    // Vérification que la réponse est un tableau
+                    if (!Array.isArray(rep)) {
+                        throw new Error("La réponse n'est pas un tableau.");
                     }
 
-                    var ve = te.join('<br> ')
+                    // Si aucun candidat n'est trouvé
+                    if (rep.length === 0) {
+                        $(tbodySelector).html(`
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-gray-500">
+                                    Aucun candidat n'a participé à au moins 5 formations.
+                                </td>
+                            </tr>
+                        `);
+                        return;
+                    }
 
-                    $('#cinq-modal table tbody').append(`
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
-                                    <th scope="row" class="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        ${i+1}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        ${data.first_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.last_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.gender}
-                                    </td>
+                    // Réinitialisation du tableau
+                    $(tbodySelector).html('');
 
-                                    <td class="px-6 py-4">
-                                        <ul>
-                                        ${ve}
-                                        </ul>
-                                    </td>
-                                </tr>
-                `)
-                })
-            }
+                    // Parcourir les candidats
+                    rep.map((data, i) => {
+                        // Préparer la liste des formations
+                        let formations = data.events.map(event => `<li>${event.title}</li>`).join('');
+
+                        // Ajouter les données au tableau
+                        $(tbodySelector).append(`
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
+                    <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                        ${i + 1}
+                    </th>
+                    <td class="px-6 py-4">${data.first_name}</td>
+                    <td class="px-6 py-4">${data.last_name}</td>
+                    <td class="px-6 py-4">${data.gender}</td>
+                    <td class="px-6 py-4">
+                        <ul>${formations}</ul>
+                    </td>
+                </tr>
+            `);
+                    });
+                } catch (error) {
+                    console.error("Erreur dans cinq_event :", error);
+                    $(tbodySelector).html(`
+            <tr>
+                <td colspan="5" class="text-center py-4 text-red-500">
+                    Une erreur est survenue. Veuillez réessayer plus tard.
+                </td>
+            </tr>
+        `);
+                }
+            };
         </script>
 
         <script>
             const nouveau = async (id) => {
-                $('#news-modal table tbody').html('')
-                let rep = await fetch('{{ route('events.api.nouveaux', $activite->id) }}')
-                    .then(response => response.json());
+                try {
+                    $('#news-modal table tbody').html(`
+                        <tr>
+                            <td colspan="4" class="text-center py-4">Chargement en cours...</td>
+                        </tr>
+                    `);
 
-                console.log('Nouveau', rep)
-
-                rep.map((data, i) => {
+                    const url = `{{ route('events.api.nouveaux', ':id') }}`.replace(':id', id);
 
 
-                    $('#news-modal table tbody').append(`
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
-                                    <th scope="row" class="px-6 py-4 font-medium  whitespace-nowrap ">
-                                        ${i+1}
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        ${data.first_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.last_name}
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        ${data.gender}
-                                    </td>
+                    const response = await fetch(url);
 
-                                </tr>
-                `)
-                })
-            }
+                    if (!response.ok) {
+                        throw new Error(`Erreur ${response.status}: Impossible de charger les données.`);
+                    }
+
+                    const rep = await response.json();
+
+
+                    if (!Array.isArray(rep)) {
+                        throw new Error("La réponse n'est pas un tableau.");
+                    }
+
+                    $('#news-modal table tbody').html('');
+                    if (rep.length === 0) {
+                        $('#news-modal table tbody').html(`
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-gray-500">
+                                    Aucun candidat trouvé.
+                                </td>
+                            </tr>
+                        `);
+                        return;
+                    }
+
+                    rep.map((data, i) => {
+                        $('#news-modal table tbody').append(`
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-gray-800 dark:text-white">
+                                <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+                                    ${i + 1}
+                                </th>
+                                <td class="px-6 py-4">
+                                    ${data.first_name}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${data.last_name}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${data.gender}
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } catch (error) {
+                    console.error('Erreur:', error.message);
+
+                    $('#news-modal table tbody').html(`
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-red-500">
+                                Une erreur s'est produite lors du chargement des données.
+                            </td>
+                        </tr>
+        `);
+                }
+            };
         </script>
         <script>
             function showUserCV(event, cvUrl, prenom, nom) {
