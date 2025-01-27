@@ -70,87 +70,50 @@ class PresenceController extends Controller
     {
         $coordonnee = $request->input('coordonnee');
 
-        $re = '/(^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$)|([0-9]{9})$/m';
-
-        preg_match($re, $coordonnee, $value);
-
         $activity = Activite::find($id);
 
-        if (isset($value[1]) && $value[1] !== "") {
-            $email = $value[1];
-            $odcuser = Odcuser::where('email', $email)->first();
 
-            // Vérifier si l'utilisateur existe
-            if (!$odcuser) {
-                return [
-                    'error' => 'Désolé, vous n\'avez pas de compte. Contactez un agent de la sécurité pour vous créer un compte. Merci !',
-                    'title' => $activity->title,
-                ];
-            }
 
-            // Vérifier si le candidat est inscrit à l'activité
-            $candidat = DB::table('candidat_attributes')
-                ->select(
-                    'candidat_attributes.candidat_id',
-                    'candidats.odcuser_id',
-                    'candidats.id',
-                    'odcusers.first_name',
-                    'odcusers.last_name',
-                    'odcusers.email',
-                    'activites.title'
-                )
-                ->join('candidats', 'candidats.id', '=', 'candidat_attributes.candidat_id')
-                ->join('activites', 'activites.id', '=', 'candidats.activite_id')
-                ->join('odcusers', 'odcusers.id', '=', 'candidats.odcuser_id')
-                ->where('candidat_attributes.value', 'like', "%$email%")
-                ->where('candidats.activite_id', $id)
-                ->where('candidats.status', 'accept')
-                ->first();
-
-            if (!$candidat) {
-                return [
-                    'error' => 'Désolé, vous n\'êtes pas enregistré sur cette activité. Merci !',
-                    'title' => $activity->title,
-                ];
-            }
-
-            // Retourner les informations du candidat
+        if (!$coordonnee) {
             return [
-                'prenom' => $odcuser->first_name,
-                'nom' => $odcuser->last_name,
-                'email' => $odcuser->email,
-                'id' => $id,
-                'activite' => $activity->title,
-            ];
-        } elseif (isset($value[2]) || is_int($value[2])) {
-            $numero = $value[2];
-            $candidat = DB::table('candidat_attributes')
-                ->select('candidat_attributes.candidat_id', 'candidats.odcuser_id', 'candidats.id', 'odcusers.first_name', 'odcusers.last_name', 'odcusers.email', 'activites.title')
-                ->join('candidats', 'candidats.id', '=', 'candidat_attributes.candidat_id')
-                ->join('activites', 'activites.id', '=', 'candidats.activite_id')
-                ->join('odcusers', 'odcusers.id', '=', 'candidats.odcuser_id')
-                ->where('candidat_attributes.value', 'like', "%$numero%")
-                ->where('candidats.activite_id', $id)
-                ->where('candidats.status', 'accept')
-                ->first();
-
-
-            if (!isset($candidat)) {
-                return [
-                    'error' => 'Désolé, vous n\'êtes pas enregistré sur cette activité. Merci !',
-                    'title' => $activity->title
-                ];
-            }
-
-            return [
-                'prenom' => $candidat->first_name,
-                'nom' => $candidat->last_name,
-                'email' => $candidat->email,
-                'id' => $id,
-                'activite' => $activity->title
+                'error' => 'Coordonnée invalide. Veuillez entrer un email ou un numéro valide.',
+                'title' => $activity->title,
             ];
         }
+
+
+        $candidat = DB::table('candidats')
+            ->join('odcusers', 'odcusers.id', '=', 'candidats.odcuser_id')
+            ->join('activites', 'activites.id', '=', 'candidats.activite_id')
+            ->join('candidat_attributes', 'candidat_attributes.candidat_id', '=', 'candidats.id')
+            ->where(function ($query) use ($coordonnee) {
+                $query->where('odcusers.email', 'like', "%$coordonnee%")
+                    ->orWhere('odcusers.first_name', 'like', "%$coordonnee%")
+                    ->orWhere('odcusers.last_name', 'like', "%$coordonnee%")
+                    ->orWhere('candidat_attributes.value', 'like', "%$coordonnee%");
+            })
+            ->where('candidats.activite_id', $id)
+            ->where('candidats.status', 'accept')
+            ->select('odcusers.first_name', 'odcusers.last_name', 'odcusers.email', 'activites.title')
+            ->first();
+
+        if (!$candidat) {
+            return [
+                'error' => 'Désolé, vous n\'êtes pas enregistré sur cette activité. Merci !',
+                'title' => $activity->title,
+            ];
+        }
+
+
+        return [
+            'prenom' => $candidat->first_name,
+            'nom' => $candidat->last_name,
+            'email' => $candidat->email,
+            'id' => $id,
+            'activite' => $candidat->title,
+        ];
     }
+
 
     public function store(Request $request)
     {

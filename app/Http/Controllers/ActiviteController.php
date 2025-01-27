@@ -774,9 +774,7 @@ class ActiviteController extends Controller
 
 
 
-        return view('events.rapport', compact("activite$activite", "candidats", "total_ih", "total_if", "total_ph", "total_pf", "total_p", "participants", "nbj", "criteres"));
+        return view('events.rapport', compact("activite", "candidats", "total_ih", "total_if", "total_ph", "total_pf", "total_p", "participants", "nbj", "criteres"));
     }
-
- 
 
 }
